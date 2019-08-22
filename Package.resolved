@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CSCoreDB",
+        "repositoryURL": "https://github.com/barimax/CSCoreDB.git",
+        "state": {
+          "branch": "master",
+          "revision": "7eeed3f8b09fd0a5208b9e7bbcdf5ed47ce8e932",
+          "version": null
+        }
+      },
+      {
+        "package": "PerfectCRUD",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CRUD.git",
+        "state": {
+          "branch": null,
+          "revision": "5a947634b7ce0b991e8f455a61ce02449f2e6f36",
+          "version": "1.2.3"
+        }
+      },
+      {
+        "package": "PerfectMySQL",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-MySQL.git",
+        "state": {
+          "branch": null,
+          "revision": "f9af3a9984aa4785fcbe7126eaf0bc39320296ec",
+          "version": "3.4.1"
+        }
+      },
+      {
+        "package": "mysqlclient",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-mysqlclient.git",
+        "state": {
+          "branch": null,
+          "revision": "afec636bfa3302ea155f462f139da46a53fd351a",
+          "version": "2.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
