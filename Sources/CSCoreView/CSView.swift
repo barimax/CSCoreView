@@ -11,18 +11,16 @@ import CSCoreDB
 
 public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
     public required convenience init() {
-        try! self.init(dbConfiguration: CSCoreDBConfig.dbConfiguration, registerName: "")
+        try! self.init(dbConfiguration: CSCoreDBConfig.dbConfiguration)
     }
     public typealias Entity = E
-    var singleName: String = ""
-    var pluralName: String = ""
-
+    public let singleName: String = Entity.singleName
+    public let pluralName: String = Entity.pluralName
+    public let registerName: String = Entity.registerName
+    
     public var db: Database<MySQLDatabaseConfiguration>
     public var table: Table<E, Database<MySQLDatabaseConfiguration>>
-    
-    
-    
-    let registerName: String
+  
     public var entity: Entity?
     public var rows: [Entity]?
     
@@ -30,8 +28,7 @@ public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
         throw CSViewError.jsonError
     }
     
-    init(dbConfiguration c: CSCoreDB?, registerName: String) throws {
-        self.registerName = registerName
+    public init(dbConfiguration c: CSCoreDB?) throws {
         var dbConfiguration: CSCoreDB
         if let uc = c {
             dbConfiguration = uc
@@ -44,14 +41,14 @@ public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
             )
         }
         self.db = try Database(
-                configuration: MySQLDatabaseConfiguration(
-                    database: dbConfiguration.database,
-                    host: dbConfiguration.host,
-                    port: dbConfiguration.port,
-                    username: dbConfiguration.username,
-                    password: dbConfiguration.password
-                )
+            configuration: MySQLDatabaseConfiguration(
+                database: dbConfiguration.database,
+                host: dbConfiguration.host,
+                port: dbConfiguration.port,
+                username: dbConfiguration.username,
+                password: dbConfiguration.password
             )
+        )
         self.table = db.table(Entity.self)
     }
 }

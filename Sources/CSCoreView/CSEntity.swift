@@ -14,8 +14,10 @@ struct CSEntity: CSDBEntityProtocol {
     static var pluralName: String = "Clients"
     var id: Int = 0
 }
-struct Client: CSEntityProtocol {
-    typealias Entity = Client
+struct TestClient: CSEntityProtocol {
+    static var registerName: String = "client"
+    
+    typealias Entity = TestClient
     
     var id: Int = 0
     
