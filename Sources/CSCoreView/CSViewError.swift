@@ -7,6 +7,6 @@
 
 enum CSViewError: Error {
     case jsonError
-    
+    case registerError(message: String)
 }
 

@@ -10,13 +10,14 @@ import PerfectMySQL
 import CSCoreDB
 
 public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
+    var refOptions: [String : CSRefOptionField<E>] = [:]
+    
+    
     public required convenience init() {
         try! self.init(dbConfiguration: CSCoreDBConfig.dbConfiguration)
     }
     public typealias Entity = E
-    public let singleName: String = Entity.singleName
-    public let pluralName: String = Entity.pluralName
-    public let registerName: String = Entity.registerName
+    public var registerName: String = Entity.registerName
     
     public var db: Database<MySQLDatabaseConfiguration>
     public var table: Table<E, Database<MySQLDatabaseConfiguration>>
@@ -50,6 +51,32 @@ public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
             )
         )
         self.table = db.table(Entity.self)
+    }
+    // Codable keys
+    enum CodingKeys: String, CodingKey {
+        case registerName, fields, refs, encodedRows, refOptions, entity, dynamicParentFieldName, singleName, pluralName, backRefs, isSP, spIdName, filteredRefOptions, isAllowedOptionsDelegate, isDocumentView, documentRecords, recordView, recordsFieldName, gen
+    }
+    // Encodable conformance
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(registerName, forKey: .registerName)
+        try container.encode(entity, forKey: .entity)
+        try container.encode(singleName, forKey: .singleName)
+        try container.encode(pluralName, forKey: .pluralName)
+    }
+    
+    // Decodable conformance
+    public required convenience init(from decoder: Decoder) throws {
+        try self.init(dbConfiguration: CSCoreDBConfig.dbConfiguration)
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.registerName = try values.decodeIfPresent(String.self,forKey: .registerName) ?? ""
+//        self.refs = try values.decodeIfPresent([String:String].self,forKey: .refs) ?? [:]
+//        self.encodedRows = try values.decodeIfPresent(String.self,forKey: .encodedRows) ?? ""
+//        self.entity = try values.decodeIfPresent(String.self,forKey: .entity)
+//        self.dynamicParentFieldName = try values.decodeIfPresent(String.self,forKey: .dynamicParentFieldName)
+//        self.isSP = try values.decodeIfPresent(Bool.self,forKey: .isSP) ?? false
+//        self.spIdName = try values.decodeIfPresent(String.self,forKey: .spIdName)
+        
     }
 }
 

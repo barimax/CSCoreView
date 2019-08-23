@@ -16,6 +16,7 @@ struct CSEntity: CSDBEntityProtocol {
 }
 struct TestClient: CSEntityProtocol {
     static var registerName: String = "client"
+    static let fields: [CSPropertyDescription] = []
     
     typealias Entity = TestClient
     

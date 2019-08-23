@@ -1,72 +1,39 @@
-////
-////  Register.swift
-////  CSCoreDB
-////
-////  Created by Georgie Ivanov on 18.08.19.
-////
 //
-//import Foundation
+//  Register.swift
+//  CSCoreDB
 //
-//public class Register {
-//    var registerStore: [String: Any] = [:]
-//    private var locked: Bool = false
-//    var viewRegister: [String: Any] = [:]
-//    
-//    public init() {}
-//    
-//    public init(registerStore: [String: Any]) {
-//        self.registerStore = registerStore
-//        self.locked = true
-//    }
-//    
-//    public func add<T: CSEntityProtocol>(entityType: T.Type, forKey: String) throws {
-//        if registerStore[forKey] == nil && !locked {
-//            registerStore[forKey] = entityType
-//        }else{
-//            throw CSCoreDBError.registerError(message: "Type for this key already exists.")
-//        }
-//    }
-//    public func getView<T: CSEntityProtocol>(forKey: String) throws -> CSView<T> {
-//        
-//        guard let entityType = registerStore[forKey], let _ : T.Type = entityType as? T.Type else  {
-//            throw CSCoreDBError.registerError(message: "No type found for this key.")
-//        }
-//        return try CSView<T>(registerName: forKey)
-//    }
-//    public func get(forKey: String) throws -> CSEntityProtocol {
-//        guard let type = registerStore[forKey] else {
-//            throw CSCoreDBError.registerError(message: "No type found for this key.")
-//        }
-//        return type as! CSEntityProtocol
-//    }
-//    public func getAll<T: CSEntityProtocol>() -> [T.Type] {
-//        var result: [T.Type] = []
-//        for (_, value) in self.registerStore {
-//            if let r: T.Type = value as? T.Type {
-//                result.append(r)
-//            }
-//        }
-//        return result
-//    }
-////    public func resolve<T: CSEntityProtocol>(forKey: String) throws -> T {
-////        let result = try self.get(forKey: forKey)
-////        return result.init()
-////    }
-//    public func resoveAll<T:CSEntityProtocol>() -> [T] {
-//        var result: [T] = []
-//        for t: T.Type in self.getAll() {
-//            result.append(t.init())
-//        }
-//        return result
-//    }
+//  Created by Georgie Ivanov on 18.08.19.
 //
-//    private func type<T: CSEntityProtocol>(t: Any) throws -> T.Type {
-//        guard let result = t.self as? T.Type else {
-//            throw CSCoreDBError.registerError(message: "Error")
-//        }
-//        return result
-//    }
-//    func lock() {
-//        self.locked = true
-//    }
-//}
+
+import Foundation
+
+public class Register {
+    public static var registerStore: [String: Any] = [:]
+    private var locked: Bool = false
+    
+    public func add(entityType: Any.Type, forKey: String) throws {
+        if Register.registerStore[forKey] == nil && !locked {
+            Register.registerStore[forKey] = entityType
+        }else{
+            throw CSViewError.registerError(message: "Type for this key already exists.")
+        }
+    }
+    public func get(forKey: String) throws -> Any.Type {
+        guard let type = Register.registerStore[forKey], let result = type as? Any.Type else {
+            throw CSViewError.registerError(message: "No type found for this key.")
+        }
+        return result
+    }
+    public func getAll() -> [Any.Type] {
+        var result: [Any.Type] = []
+        for (_, value) in Register.registerStore {
+            if let r: Any.Type = value as? Any.Type {
+                result.append(r)
+            }
+        }
+        return result
+    }
+    func lock() {
+        self.locked = true
+    }
+}

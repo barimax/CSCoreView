@@ -6,7 +6,7 @@
 //
 import CSCoreDB
 
-protocol CSOptionableProtocol: CSDatabaseProtocol {
+public protocol CSOptionableProtocol: CSDatabaseProtocol {
     static var optionField: KeyPath<Entity, String> { get }
     func options() -> [Int:String]
 }

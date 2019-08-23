@@ -7,13 +7,14 @@
 import Foundation
 import PerfectCRUD
 
-protocol CSViewProtocol {
+protocol CSViewProtocol: Codable {
     associatedtype Entity: CSEntityProtocol
     var singleName: String { get }
     var pluralName: String { get }
+    var fields: [CSPropertyDescription] { get }
     var entity: Entity? { get set }
     var rows: [Entity]? { get set }
-//    var fields: [CSPropertyDescription] { get }
+    var refOptions: [String:CSRefOptionField<Entity>] { get }
     
     func json() throws -> String
     func getAll() throws -> [Entity]
@@ -29,7 +30,7 @@ extension CSViewProtocol {
     public var pluralName: String {
         return Entity.pluralName
     }
-//    public var fields: [CSPropertyDescription] {
-//        return CSEntityProtocol.refs()
-//    }
+    public var fields: [CSPropertyDescription] {
+        return Entity.fields
+    }
 }
