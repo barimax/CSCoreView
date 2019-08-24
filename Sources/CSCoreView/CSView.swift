@@ -10,9 +10,7 @@ import PerfectMySQL
 import CSCoreDB
 
 public class CSView<E: CSEntityProtocol>: CSViewProtocol, CSDatabaseProtocol {
-    var refOptions: [String : CSRefOptionField<E>] = [:]
-    
-    
+
     public required convenience init() {
         try! self.init(dbConfiguration: CSCoreDBConfig.dbConfiguration)
     }

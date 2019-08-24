@@ -7,13 +7,12 @@
 
 import Foundation
 
-struct CSRefOptionField<Entity: CSEntityProtocol>: Codable {
+public struct CSRefOptionField: Codable {
     let registerName: String
     let options: [Int:String]
     var isButton: Bool
-    var view: CSView<Entity>?
 }
-struct CSBackRefs: Codable {
+public struct CSBackRefs: Codable {
     var registerName: String = ""
     var formField: String = ""
     var names: [String:String] = [:]

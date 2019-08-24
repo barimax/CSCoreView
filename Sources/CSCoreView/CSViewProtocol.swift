@@ -7,14 +7,15 @@
 import Foundation
 import PerfectCRUD
 
-protocol CSViewProtocol: Codable {
+public protocol CSViewProtocol: Codable {
     associatedtype Entity: CSEntityProtocol
     var singleName: String { get }
     var pluralName: String { get }
     var fields: [CSPropertyDescription] { get }
     var entity: Entity? { get set }
     var rows: [Entity]? { get set }
-    var refOptions: [String:CSRefOptionField<Entity>] { get }
+    var refOptions: [String:CSRefOptionField] { get }
+    var backRefs: [CSBackRefs] { get }
     
     func json() throws -> String
     func getAll() throws -> [Entity]
@@ -23,7 +24,7 @@ protocol CSViewProtocol: Codable {
     func delete(entityId id: Int) throws
 
 }
-extension CSViewProtocol {
+public extension CSViewProtocol {
     public var singleName: String {
         return Entity.singleName
     }
@@ -31,6 +32,6 @@ extension CSViewProtocol {
         return Entity.pluralName
     }
     public var fields: [CSPropertyDescription] {
-        return Entity.fields
+        return Entity.fields 
     }
 }

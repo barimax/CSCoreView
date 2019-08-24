@@ -15,7 +15,7 @@ public struct CSPropertyDescription: Encodable {
     colWidth: ColWidth,
     name: String,
     required: Bool,
-    ref: CSDBEntityProtocol?
+    ref: CSOptionableDelegate?
     
     public init(
         keyPath: AnyKeyPath,
@@ -24,7 +24,7 @@ public struct CSPropertyDescription: Encodable {
         colWidth: ColWidth = .normal,
         name: String = "name",
         required: Bool = true,
-        ref: CSDBEntityProtocol? = nil
+        ref: CSOptionableDelegate? = nil
         ){
         
         self.keyPath = keyPath

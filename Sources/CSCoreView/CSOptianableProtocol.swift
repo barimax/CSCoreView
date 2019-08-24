@@ -7,7 +7,7 @@
 import CSCoreDB
 
 public protocol CSOptionableProtocol: CSDatabaseProtocol {
-    static var optionField: KeyPath<Entity, String> { get }
+    static var optionField: AnyKeyPath { get }
     func options() -> [Int:String]
 }
 extension CSOptionableProtocol {
@@ -16,11 +16,18 @@ extension CSOptionableProtocol {
         do {
             let queryResult = try table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
             for (k,v) in queryResult {
-                res[k] = v
+                if let s = v as? String {
+                    res[k] = s
+                }
             }
         } catch {
             print(error)
         }
         return res
     }
+}
+public protocol CSOptionableDelegate {
+    static var optionField: AnyKeyPath { get }
+    func options() -> [Int:String]
+    static var registerName: String { get }
 }

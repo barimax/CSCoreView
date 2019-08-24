@@ -14,18 +14,6 @@ struct CSEntity: CSDBEntityProtocol {
     static var pluralName: String = "Clients"
     var id: Int = 0
 }
-struct TestClient: CSEntityProtocol {
-    static var registerName: String = "client"
-    static let fields: [CSPropertyDescription] = []
-    
-    typealias Entity = TestClient
-    
-    var id: Int = 0
-    
-    static var tableName: String = "partners"
-    static var singleName: String = "Client"
-    static var pluralName: String = "Clients"
-    
-}
+
 
 
