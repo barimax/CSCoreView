@@ -6,26 +6,30 @@
 //
 import CSCoreDB
 
-public protocol CSOptionableProtocol: CSDatabaseProtocol {
+public protocol CSOptionableProtocol {
     static var optionField: AnyKeyPath { get }
-    func options() -> [Int:String]
 }
-extension CSOptionableProtocol {
-    func options() -> [Int:String] {
-        var res: [Int: String] = [:]
-        do {
-            let queryResult = try table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
-            for (k,v) in queryResult {
-                if let s = v as? String {
-                    res[k] = s
-                }
-            }
-        } catch {
-            print(error)
-        }
-        return res
-    }
-}
+
+//public protocol CSOptionableProtocol: CSDatabaseProtocol {
+//    static var optionField: AnyKeyPath { get }
+//    func options() -> [Int:String]
+//}
+//extension CSOptionableProtocol {
+//    func options() -> [Int:String] {
+//        var res: [Int: String] = [:]
+//        do {
+//            let queryResult = try table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
+//            for (k,v) in queryResult {
+//                if let s = v as? String {
+//                    res[k] = s
+//                }
+//            }
+//        } catch {
+//            print(error)
+//        }
+//        return res
+//    }
+//}
 public protocol CSOptionableDelegate {
     static var optionField: AnyKeyPath { get }
     func options() -> [Int:String]

@@ -11,7 +11,7 @@ public protocol CSViewProtocol: Codable {
     associatedtype Entity: CSEntityProtocol
     var singleName: String { get }
     var pluralName: String { get }
-    var fields: [CSPropertyDescription] { get }
+    var fields: [CSPropertyDescription<Entity>] { get }
     var entity: Entity? { get set }
     var rows: [Entity]? { get set }
     var refOptions: [String:CSRefOptionField] { get }
@@ -31,7 +31,7 @@ public extension CSViewProtocol {
     public var pluralName: String {
         return Entity.pluralName
     }
-    public var fields: [CSPropertyDescription] {
-        return Entity.fields 
+    public var fields: [CSPropertyDescription<Entity>] {
+        return Entity.fields as! [CSPropertyDescription<Self.Entity>] 
     }
 }

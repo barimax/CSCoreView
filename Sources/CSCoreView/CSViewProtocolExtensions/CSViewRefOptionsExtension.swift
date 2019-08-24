@@ -9,18 +9,23 @@ import Foundation
 import CSCoreDB
 
 public extension CSViewProtocol {
+    private func getRefOptions<R: CSEntityProtocol>(ref: R) -> CSRefOptionField where R:CSOptionableProtocol  {
+        let view = try! R.view()
+        let options = view.options(type: R.self)
+        let refOption: CSRefOptionField = CSRefOptionField(
+            registerName: R.registerName,
+            options: options,
+            isButton: false
+        )
+        return refOption
+    }
     public var refOptions: [String:CSRefOptionField] {
         var result: [String:CSRefOptionField] = [:]
         
         for field in self.fields {
-            if let ref = field.ref {
-                let options: [Int:String] = ref.options()
-                let refOption: CSRefOptionField = CSRefOptionField(
-                    registerName: type(of:ref).registerName,
-                    options: options,
-                    isButton: false
-                )
-                result[field.name] = refOption
+            if let ref = field.ref  {
+                print(type(of: ref))
+//                result[field.name] = getRefOptions(ref: ref)
             }
         }
         return result

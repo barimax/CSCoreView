@@ -14,7 +14,7 @@ public protocol CSEntityProtocol: CSDBEntityProtocol {
     static var pluralName: String { get }
     static var registerName: String { get }
     static func view() throws -> CSView<Entity>
-    static var fields: [CSPropertyDescription] { get }
+    static var fields: [CSPropertyDescription<Entity>] { get }
     
     var id: Int { get set }
 }
