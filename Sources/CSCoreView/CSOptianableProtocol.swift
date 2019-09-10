@@ -14,22 +14,20 @@ public protocol CSOptionableProtocol {
 
 public protocol CSOptionableEntityProtocol: CSOptionableProtocol {
     associatedtype Entity: CSEntityProtocol
-    static func view() throws -> CSView<Entity>
+    static func view() throws -> CSView
 }
 public extension CSOptionableEntityProtocol {
     static func options() -> [Int:String] {
         var res: [Int: String] = [:]
-        if let view = try? self.view() {
-            do {
-                let queryResult = try view.table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
-                for (k,v) in queryResult {
-                    if let s = v as? String {
-                        res[k] = s
-                    }
+        do {
+            let queryResult = try Entity().table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
+            for (k,v) in queryResult {
+                if let s = v as? String {
+                    res[k] = s
                 }
-            } catch {
-                print(error)
             }
+        } catch {
+            print(error)
         }
         return res
     }

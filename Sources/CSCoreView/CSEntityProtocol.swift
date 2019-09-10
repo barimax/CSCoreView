@@ -13,18 +13,23 @@ public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
     static var singleName: String { get }
     static var pluralName: String { get }
     static var registerName: String { get }
+    static var fields: [CSPropertyDescription] { get }
+    static func view() -> CSView
 }
 
-public protocol CSEntityProtocol: CSBaseEntityProtocol {
-    associatedtype Entity: CSEntityProtocol
-    static func view() throws -> CSView<Entity>
-    static var fields: [CSPropertyDescription] { get }
+public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {
+    
+    static func getAll() throws -> [Self]
+    static func get(id: Int) throws -> Self
+    static func save(entity: Self) throws -> Self
+    static func delete(entityId id: Int) throws
     
     var id: Int { get set }
 }
 public extension CSEntityProtocol {
-    static func view() throws -> CSView<Entity> {
-        return try CSView<Entity>(dbConfiguration: CSCoreDBConfig.dbConfiguration)
+    
+    static func view() -> CSView {
+        return CSView(entity: Entity.self)
     }
     static var refs: [String:String] {
         var res: [String:String] = [:]
