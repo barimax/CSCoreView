@@ -15,7 +15,7 @@ public struct CSRefOptionField: Codable {
 public struct CSBackRefs: Codable {
     var registerName: String = ""
     var formField: String = ""
-    var names: [String:String] = [:]
+    var names: [String:String] = [:] //???
     var singleName: String = ""
     var pluralName: String = ""
     var createNewByMultiple: Bool = false

@@ -9,9 +9,10 @@ import PerfectCRUD
 
 public protocol CSViewProtocol: Codable {
     associatedtype Entity: CSEntityProtocol
+    var registerName: String { get }
     var singleName: String { get }
     var pluralName: String { get }
-    var fields: [CSPropertyDescription<Entity>] { get }
+    var fields: [CSPropertyDescription] { get }
     var entity: Entity? { get set }
     var rows: [Entity]? { get set }
     var refOptions: [String:CSRefOptionField] { get }
@@ -22,7 +23,7 @@ public protocol CSViewProtocol: Codable {
     func get(id: Int) throws -> Entity
     func save(entity: Entity) throws -> Entity
     func delete(entityId id: Int) throws
-
+    
 }
 public extension CSViewProtocol {
     public var singleName: String {
@@ -31,7 +32,7 @@ public extension CSViewProtocol {
     public var pluralName: String {
         return Entity.pluralName
     }
-    public var fields: [CSPropertyDescription<Entity>] {
-        return Entity.fields as! [CSPropertyDescription<Self.Entity>] 
+    public var fields: [CSPropertyDescription] {
+        return Entity.fields
     }
 }

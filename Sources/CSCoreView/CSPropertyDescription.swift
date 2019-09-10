@@ -8,14 +8,14 @@
 import Foundation
 import CSCoreDB
 
-public struct CSPropertyDescription<E: CSEntityProtocol>: Encodable {
+public struct CSPropertyDescription: Encodable {
     public let fieldType: FieldType,
     jsType: JSType,
     keyPath: AnyKeyPath,
     colWidth: ColWidth,
     name: String,
     required: Bool,
-    ref: E?
+    ref: CSOptionableProtocol.Type?
     
     public init(
         keyPath: AnyKeyPath,
@@ -24,7 +24,7 @@ public struct CSPropertyDescription<E: CSEntityProtocol>: Encodable {
         colWidth: ColWidth = .normal,
         name: String = "name",
         required: Bool = true,
-        ref: E? = nil
+        ref: CSOptionableProtocol.Type? = nil
         ){
         
         self.keyPath = keyPath
