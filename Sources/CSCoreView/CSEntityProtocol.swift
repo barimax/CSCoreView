@@ -41,17 +41,5 @@ public extension CSEntityProtocol {
         }
         return res
     }
-    static func getAll() throws -> [Self] {
-        return try self.getAll()
-    }
-    static func get(id: Int) throws -> Self {
-        return try self.get(id: id)
-    }
-    static func save(entity: Self) throws -> Self {
-        return try self.save(entity: entity)
-    }
-    static func delete(entityId id: Int) throws {
-        try self.delete(entityId: id)
-    }
 }
 
