@@ -20,10 +20,11 @@ public extension CSOptionableEntityProtocol {
     static func options() -> [Int:String] {
         var res: [Int: String] = [:]
         do {
-            let queryResult = try Entity().table.select().map { ($0.id, $0[keyPath: Self.optionField]) }
-            for (k,v) in queryResult {
-                if let s = v as? String {
-                    res[k] = s
+            if let queryResult = try Entity.table?.select().map({ ($0.id, $0[keyPath: Self.optionField]) })  {
+                for (k,v) in queryResult {
+                    if let s = v as? String {
+                        res[k] = s
+                    }
                 }
             }
         } catch {

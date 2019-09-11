@@ -19,6 +19,7 @@ public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
 
 public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {
     
+    
     static func getAll() throws -> [Self]
     static func get(id: Int) throws -> Self
     static func save(entity: Self) throws -> Self
@@ -39,6 +40,18 @@ public extension CSEntityProtocol {
             }
         }
         return res
+    }
+    static func getAll() throws -> [Self] {
+        return try self.getAll()
+    }
+    static func get(id: Int) throws -> Self {
+        return try self.get(id: id)
+    }
+    static func save(entity: Self) throws -> Self {
+        return try self.save(entity: entity)
+    }
+    static func delete(entityId id: Int) throws {
+        try self.delete(entityId: id)
     }
 }
 
