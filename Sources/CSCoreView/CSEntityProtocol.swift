@@ -15,18 +15,10 @@ public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
     static var registerName: String { get }
     static var fields: [CSPropertyDescription] { get }
     static func view() -> CSView
+    func getAll() throws -> [CSBaseEntityProtocol]
 }
 
-public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {
-    
-    
-    static func getAll() throws -> [Self]
-    static func get(id: Int) throws -> Self
-    static func save(entity: Self) throws -> Self
-    static func delete(entityId id: Int) throws
-    
-    var id: Int { get set }
-}
+public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {}
 public extension CSEntityProtocol {
     
     static func view() -> CSView {
@@ -40,6 +32,9 @@ public extension CSEntityProtocol {
             }
         }
         return res
+    }
+    func getAll() throws -> [CSBaseEntityProtocol] {
+        return try self.getAll() as [CSBaseEntityProtocol]
     }
 }
 
