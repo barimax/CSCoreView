@@ -45,7 +45,7 @@ public extension CSEntityProtocol {
         return try Self.get(id: id) as! CSBaseEntityProtocol
     }
     static func save(entity: CSBaseEntityProtocol) throws -> CSBaseEntityProtocol {
-        return try Self.save(entity: entity)
+        return try Self.save(entity: entity as! CSDBEntityProtocol)
     }
 }
 
