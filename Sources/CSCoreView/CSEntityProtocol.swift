@@ -16,8 +16,9 @@ public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
     static var fields: [CSPropertyDescription] { get }
     static func view() -> CSView
     static func getAll() throws -> [CSBaseEntityProtocol]
-    static func get(id: Int) throws -> CSBaseEntityProtocol
+    static func get(id: UInt64) throws -> CSBaseEntityProtocol
     static func save(entity: CSBaseEntityProtocol) throws -> CSBaseEntityProtocol
+    static func delete(entityId id: UInt64) throws
 }
 
 public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {
@@ -44,7 +45,7 @@ public extension CSEntityProtocol {
         return try Self.get(id: id) as! CSBaseEntityProtocol
     }
     static func save(entity: CSBaseEntityProtocol) throws -> CSBaseEntityProtocol {
-        return try Self.save(entity: entity) as! CSBaseEntityProtocol
+        return try Self.save(entity: entity)
     }
 }
 

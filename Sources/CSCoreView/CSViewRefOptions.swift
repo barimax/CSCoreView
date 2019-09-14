@@ -9,7 +9,7 @@ import Foundation
 
 public struct CSRefOptionField: Codable {
     let registerName: String
-    let options: [Int:String]
+    let options: [UInt64:String]
     var isButton: Bool
 }
 public struct CSBackRefs: Codable {
