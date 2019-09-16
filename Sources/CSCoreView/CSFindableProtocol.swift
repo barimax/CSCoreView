@@ -10,6 +10,7 @@ import Foundation
 public protocol CSFindableProtocol {
     static var fields: [CSPropertyDescription] { get }
     static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol]
+    var id: UInt64 { get }
 }
 
 public protocol CSFindableEntityProtocol: CSFindableProtocol {
@@ -21,6 +22,9 @@ public extension CSFindableEntityProtocol {
         do {
             var keyPathsValues: [AnyKeyPath: Any] = [:]
             for (key, value) in criteria {
+                if key == "id" || key == "ID" {
+                    keyPathsValues[\Entity.id] = value
+                }
                 for field in Self.fields {
                     if field.name == key {
                         keyPathsValues[field.keyPath] = value
