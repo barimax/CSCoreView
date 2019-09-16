@@ -4,7 +4,6 @@
 //
 //  Created by Georgie Ivanov on 19.08.19.
 //
-import CSCoreDB
 
 public protocol CSOptionableProtocol {
     static var optionField: AnyKeyPath { get }

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CSCoreDB
 
 public extension CSViewProtocol {
     public var refOptions: [String:CSRefOptionField] {

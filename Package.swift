@@ -9,10 +9,11 @@ let package = Package(
 		.library(name: "CSCoreView", targets: ["CSCoreView"])
 	],
 	dependencies: [
-        .package(url: "https://github.com/barimax/CSCoreDB.git", .branch("master")),
+        .package(url: "https://github.com/PerfectlySoft/Perfect-CRUD.git", "1.0.0"..<"2.0.0"),
+        .package(url: "https://github.com/PerfectlySoft/Perfect-MySQL.git", "3.0.0"..<"4.0.0")
 	],
 	targets: [
-		.target(name: "CSCoreView", dependencies: ["CSCoreDB"]),
+		.target(name: "CSCoreView", dependencies: ["PerfectCRUD", "PerfectMySQL"]),
 		.testTarget(name: "CSCoreViewTests", dependencies: ["CSCoreView"])
 	]
 )

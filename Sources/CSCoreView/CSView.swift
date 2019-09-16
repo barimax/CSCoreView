@@ -7,7 +7,6 @@
 import Foundation
 import PerfectCRUD
 import PerfectMySQL
-import CSCoreDB
 
 public class CSView: CSViewProtocol {
     public var registerName: String

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CSCoreDB
 
 public protocol CSSearchableProtocol {
     static var searchableFields: [AnyKeyPath] { get }

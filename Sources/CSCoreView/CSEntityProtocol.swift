@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CSCoreDB
 
 public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
     static var refs: [String:String] { get }

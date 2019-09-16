@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CSCoreDB
 
 public struct CSPropertyDescription: Encodable {
     public let fieldType: FieldType,
