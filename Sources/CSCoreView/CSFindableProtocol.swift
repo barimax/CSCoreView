@@ -7,16 +7,16 @@
 
 import Foundation
 
-protocol CSFindableProtocol {
+public protocol CSFindableProtocol {
     static var fields: [CSPropertyDescription] { get }
     static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol]
 }
 
-protocol CSFindableEntityProtocol: CSFindableProtocol {
+public protocol CSFindableEntityProtocol: CSFindableProtocol {
     associatedtype Entity: CSEntityProtocol
 }
-extension CSFindableEntityProtocol {
-    static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol] {
+public extension CSFindableEntityProtocol {
+    public static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol] {
         var res: [CSBaseEntityProtocol] = []
         do {
             var keyPathsValues: [AnyKeyPath: Any] = [:]
