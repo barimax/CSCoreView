@@ -32,7 +32,7 @@ public extension CSFindableEntityProtocol {
                     var expression = Entity.equalExpression(keyPath: fKeyPath, query: "\(firstValue)")
                     for (anyKeyPath, value) in keyPathsValues {
                         if let keyPath = anyKeyPath as? KeyPath<Entity, String> {
-                            expression = Entity.andExpression(l: expression, r: Entity.likeExpression(keyPath: keyPath, query: "\(value)"))
+                            expression = Entity.andExpression(l: expression, r: Entity.equalExpression(keyPath: keyPath, query: "\(value)"))
                         }
                     }
                     if let result = try Entity.table?.where(expression).select().map({ $0 }) {

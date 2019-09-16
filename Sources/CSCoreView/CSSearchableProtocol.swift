@@ -9,7 +9,7 @@ import Foundation
 import CSCoreDB
 
 public protocol CSSearchableProtocol {
-    static var searchableFields: [KeyPath<Any, String>] { get }
+    static var searchableFields: [AnyKeyPath] { get }
     static func search(query: String) -> [CSBaseEntityProtocol]
 }
 public protocol CSSearchableEntityProtocol: CSSearchableProtocol {
