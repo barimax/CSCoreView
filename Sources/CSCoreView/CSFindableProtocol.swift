@@ -31,7 +31,7 @@ public extension CSFindableEntityProtocol {
                 if let firstKeyPath = keyPathsValues.first?.key, let firstValue = keyPathsValues.first?.value, let fKeyPath = firstKeyPath as? KeyPath<Entity, String> {
                     var expression = Entity.equalExpression(keyPath: fKeyPath, query: "\(firstValue)")
                     for (anyKeyPath, value) in keyPathsValues {
-                        if let keyPath = anyKeyPath as? KeyPath<Entity, String> {
+                        if let keyPath = anyKeyPath as? KeyPath<Entity, String>, fKeyPath != keyPath {
                             expression = Entity.andExpression(l: expression, r: Entity.equalExpression(keyPath: keyPath, query: "\(value)"))
                         }
                     }
