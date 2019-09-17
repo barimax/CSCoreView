@@ -5,7 +5,7 @@
 //  Created by Georgie Ivanov on 14.09.19.
 //
 
-import Foundation
+import PerfectCRUD
 
 public protocol CSSearchableProtocol {
     static var searchableFields: [AnyKeyPath] { get }
@@ -20,10 +20,10 @@ public extension CSSearchableEntityProtocol {
         do {
             if Self.searchableFields.count > 0 {
                 if let searchKeyPath = Self.searchableFields[0] as? KeyPath<Entity, String> {
-                    var expression = Entity.likeExpression(keyPath: searchKeyPath, query: query)
+                    var expression = searchKeyPath %=% query
                     for index in 1..<Self.searchableFields.count {
                         if let sKeyPath = Self.searchableFields[index] as? KeyPath<Entity, String> {
-                            expression = Entity.orExpression(l: expression, r: Entity.likeExpression(keyPath: sKeyPath, query: query))
+                            expression = expression || sKeyPath %=% query
                         }
                     }
                     if let result = try Entity.table?.where(expression).select().map({ $0 }) {

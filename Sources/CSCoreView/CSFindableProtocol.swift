@@ -5,7 +5,7 @@
 //  Created by Georgie Ivanov on 14.09.19.
 //
 
-import Foundation
+import PerfectCRUD
 
 public protocol CSFindableProtocol {
     static var fields: [CSPropertyDescription] { get }
@@ -17,6 +17,22 @@ public protocol CSFindableEntityProtocol: CSFindableProtocol {
     associatedtype Entity: CSEntityProtocol
 }
 public extension CSFindableEntityProtocol {
+    private static func createExpression(_ anyKeyPath: AnyKeyPath, value: Any) -> CRUDBooleanExpression? {
+        switch (anyKeyPath, value) {
+        case let (fk, fv) as (KeyPath<Entity, String>, String):
+            return fk == fv
+        case let (fk, fv) as (KeyPath<Entity, UInt64>, UInt64):
+            return fk == fv
+        case let (fk, fv) as (KeyPath<Entity, Int>, Int):
+            return fk == fv
+        case let (fk, fv) as (KeyPath<Entity, Int8>, Int8):
+            return fk == fv
+        case let (fk, fv) as (KeyPath<Entity, Bool>, Bool):
+            return fk == fv
+        default :
+            return nil
+        }
+    }
     public static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol] {
         var res: [CSBaseEntityProtocol] = []
         do {
@@ -32,11 +48,11 @@ public extension CSFindableEntityProtocol {
                 }
             }
             if keyPathsValues.count > 0 {
-                if let firstKeyPath = keyPathsValues.first?.key, let firstValue = keyPathsValues.first?.value, let fKeyPath = firstKeyPath as? KeyPath<Entity, String> {
-                    var expression = Entity.equalExpression(keyPath: fKeyPath, query: "\(firstValue)")
+                let first = keyPathsValues.remove(at: keyPathsValues.startIndex)
+                if var expression = Self.createExpression(first.key, value: first.value) {
                     for (anyKeyPath, value) in keyPathsValues {
-                        if let keyPath = anyKeyPath as? KeyPath<Entity, String>, fKeyPath != keyPath {
-                            expression = Entity.andExpression(l: expression, r: Entity.equalExpression(keyPath: keyPath, query: "\(value)"))
+                        if let curExpr = Self.createExpression(anyKeyPath, value: value) {
+                            expression = expression && curExpr
                         }
                     }
                     if let result = try Entity.table?.where(expression).select().map({ $0 }) {
