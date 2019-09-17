@@ -38,8 +38,10 @@ public extension CSFindableEntityProtocol {
         do {
             var keyPathsValues: [AnyKeyPath: Any] = [:]
             for (key, value) in criteria {
-                if key == "id" || key == "ID" {
-                    keyPathsValues[\Entity.id] = value
+                if key == "id" || key == "ID" || key == "iD" || key == "Id" {
+                    if let v = value as? Int {
+                        keyPathsValues[\Entity.id] = UInt64(v)
+                    }
                 }
                 for field in Self.fields {
                     if field.name == key {
