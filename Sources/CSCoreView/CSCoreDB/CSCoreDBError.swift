@@ -10,4 +10,5 @@ enum CSCoreDBError: Error {
     case entityNotFound
     case jsonDataError
     case saveError(message: String)
+    case joinError
 }

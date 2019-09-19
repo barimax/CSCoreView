@@ -7,14 +7,7 @@
 
 import PerfectCRUD
 
-public protocol CSSearchableProtocol {
-    static var searchableFields: [AnyKeyPath] { get }
-    static func search(query: String) -> [CSBaseEntityProtocol]
-}
-public protocol CSSearchableEntityProtocol: CSSearchableProtocol {
-    associatedtype Entity: CSEntityProtocol
-}
-public extension CSSearchableEntityProtocol {
+public extension CSEntityProtocol {
     static func search(query: String) -> [CSBaseEntityProtocol] {
         var res: [CSBaseEntityProtocol]  = []
         do {

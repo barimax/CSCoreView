@@ -6,6 +6,7 @@
 //
 
 public protocol CSOptionableProtocol {
+    static var tableName: String { get }
     static var optionField: AnyKeyPath { get }
     static var registerName: String { get }
     static func options() -> [UInt64:String]

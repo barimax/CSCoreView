@@ -18,12 +18,12 @@ public struct CSPropertyDescription: Encodable {
     
     public init(
         keyPath: AnyKeyPath,
+        ref: CSOptionableProtocol.Type? = nil,
         fieldType: FieldType = .text,
         jsType: JSType = .string,
         colWidth: ColWidth = .normal,
         name: String = "name",
-        required: Bool = true,
-        ref: CSOptionableProtocol.Type? = nil
+        required: Bool = true
         ){
         
         self.keyPath = keyPath

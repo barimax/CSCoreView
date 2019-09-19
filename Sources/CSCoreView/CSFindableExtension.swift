@@ -7,16 +7,7 @@
 
 import PerfectCRUD
 
-public protocol CSFindableProtocol {
-    static var fields: [CSPropertyDescription] { get }
-    static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol]
-    var id: UInt64 { get }
-}
-
-public protocol CSFindableEntityProtocol: CSFindableProtocol {
-    associatedtype Entity: CSEntityProtocol
-}
-public extension CSFindableEntityProtocol {
+public extension CSEntityProtocol {
     private static func createExpression(_ anyKeyPath: AnyKeyPath, value: Any) -> CRUDBooleanExpression? {
         switch (anyKeyPath, value) {
         case let (fk, fv) as (KeyPath<Entity, String>, String):
@@ -68,3 +59,4 @@ public extension CSFindableEntityProtocol {
         return res
     }
 }
+

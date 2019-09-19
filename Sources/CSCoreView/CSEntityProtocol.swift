@@ -13,16 +13,18 @@ public protocol CSBaseEntityProtocol: CSDBEntityProtocol {
     static var pluralName: String { get }
     static var registerName: String { get }
     static var fields: [CSPropertyDescription] { get }
+    static var searchableFields: [AnyKeyPath] { get }
     static func view() -> CSView
+    static func create() throws
     static func getAll() throws -> [CSBaseEntityProtocol]
     static func get(id: UInt64) throws -> CSBaseEntityProtocol
     static func save(entity: CSBaseEntityProtocol) throws -> CSBaseEntityProtocol
     static func delete(entityId id: UInt64) throws
+    static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol]
+    static func search(query: String) -> [CSBaseEntityProtocol]
 }
 
-public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {
-    
-}
+public protocol CSEntityProtocol: CSBaseEntityProtocol, CSDatabaseProtocol where Entity: CSEntityProtocol {}
 public extension CSEntityProtocol {
     
     static func view() -> CSView {
@@ -36,6 +38,9 @@ public extension CSEntityProtocol {
             }
         }
         return res
+    }
+    static func create() throws {
+        try Self.db?.create(Entity.self, policy: .shallow)
     }
     static func getAll() throws -> [CSBaseEntityProtocol] {
         return try Self.getAll() as! [CSBaseEntityProtocol]
