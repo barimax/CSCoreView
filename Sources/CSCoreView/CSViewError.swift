@@ -8,5 +8,7 @@
 enum CSViewError: Error {
     case jsonError
     case registerError(message: String)
+    case findError
+    case searchError
 }
 

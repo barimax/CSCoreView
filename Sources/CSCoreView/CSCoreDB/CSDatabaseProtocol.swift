@@ -17,10 +17,6 @@ public protocol CSDatabaseProtocol {
     static func get(id: UInt64) throws -> Entity
     static func save(entity: Any) throws -> Entity
     static func delete(entityId id: UInt64) throws
-    static func equalExpression<E: Codable>(keyPath: KeyPath<E, String>, query: String) -> CRUDBooleanExpression
-    static func likeExpression<E: Codable>(keyPath: KeyPath<E, String>, query: String) -> CRUDBooleanExpression
-    static func orExpression(l: CRUDBooleanExpression, r: CRUDBooleanExpression) -> CRUDBooleanExpression
-    static func andExpression(l: CRUDBooleanExpression, r: CRUDBooleanExpression) -> CRUDBooleanExpression
 }
 public extension CSDatabaseProtocol {
     public static var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? {
@@ -44,18 +40,6 @@ public extension CSDatabaseProtocol {
                 password: dbConfiguration.password
             )
         )
-    }
-    public static func equalExpression<E: Codable>(keyPath: KeyPath<E, String>, query: String) -> CRUDBooleanExpression {
-        return keyPath == query
-    }
-    public static func likeExpression<E: Codable>(keyPath: KeyPath<E, String>, query: String) -> CRUDBooleanExpression {
-        return keyPath %=% query
-    }
-    public static func orExpression(l: CRUDBooleanExpression, r: CRUDBooleanExpression) -> CRUDBooleanExpression {
-        return l || r
-    }
-    public static func andExpression(l: CRUDBooleanExpression, r: CRUDBooleanExpression) -> CRUDBooleanExpression {
-        return l && r
     }
 }
 
