@@ -19,7 +19,7 @@ public extension CSEntityProtocol {
                             expression = expression || sKeyPath %=% query
                         }
                     }
-                    if let result = try Entity.table?.where(expression).select().map({ $0 }) {
+                    if let result = try Self.table?.where(expression).select().map({ $0 }) {
                         res = result
                     }
                 }

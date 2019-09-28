@@ -10,13 +10,9 @@ import PerfectCRUD
 import PerfectMySQL
 
 public protocol CSDatabaseProtocol {
-    associatedtype Entity: CSDBEntityProtocol
+    associatedtype Entity: CSBaseEntityProtocol
     static var db: Database<MySQLDatabaseConfiguration>? { get }
     static var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? { get }
-    static func getAll() throws -> [Entity]
-    static func get(id: UInt64) throws -> Entity
-    static func save(entity: Any) throws -> Entity
-    static func delete(entityId id: UInt64) throws
 }
 public extension CSDatabaseProtocol {
     public static var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? {
