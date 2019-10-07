@@ -8,9 +8,9 @@
 import Foundation
 
 public struct CSRefOptionField: Codable {
-    let registerName: String
-    let options: [UInt64:String]
-    var isButton: Bool
+    public let registerName: String
+    public let options: [UInt64:String]
+    public var isButton: Bool
 }
 public struct CSBackRefs: Codable {
     var registerName: String = ""

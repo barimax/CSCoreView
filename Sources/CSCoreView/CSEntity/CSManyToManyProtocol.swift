@@ -57,15 +57,15 @@ public extension CSManyToManyEntityProtocol {
             if let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]?>, let refType = Self.manyToManyRefs[keyPath]  {
                 joinNum += 1
                 let refTableName = refType.tableName
-                if refType.firstIdType.tableName == refType.secondIdType.tableName {
+                if refType.firstIdType.registerName == refType.secondIdType.registerName {
                     throw CSCoreDBError.joinError
                 }
                 if let joinType = field.ref as? TableNameProvider.Type {
                     let joinTableName = joinType.tableName
                     
                     
-                    let f = refType.firstIdType.tableName == mainTableName ? "firstId" : "secondId"
-                    let s = refType.secondIdType.tableName == joinTableName ? "secondId" : "firstId"
+                    let f = refType.firstIdType.registerName == mainTableName ? "firstId" : "secondId"
+                    let s = refType.secondIdType.registerName == joinTableName ? "secondId" : "firstId"
                     
                     select += ", IF(GROUP_CONCAT(DISTINCT j\(joinNum).id) IS NULL, \"[]\", CONCAT(\"[\", GROUP_CONCAT(DISTINCT j\(joinNum).id), \"]\")) AS \(field.name) "
                     join += " " + """
@@ -97,10 +97,10 @@ public extension CSManyToManyEntityProtocol {
             try currentConnection.transaction {
                 for field in Self.fields {
                     if let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]?>, let refType = Self.manyToManyRefs[keyPath] {
-                        if refType.firstIdType.tableName == refType.secondIdType.tableName {
+                        if refType.firstIdType.registerName == refType.secondIdType.registerName {
                             throw CSCoreDBError.joinError
                         }
-                        let refField = refType.firstIdType.tableName == Self.tableName ? "firstId" : "secondId"
+                        let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
                         let joinField = refField == "firstId" ? "secondId" : "firstId"
                         try currentConnection.sql("DELETE FROM \(refType.tableName) WHERE \(refField) = \(dbEntity.id)")
                         guard let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]> else {
@@ -128,10 +128,10 @@ public extension CSManyToManyEntityProtocol {
                 dbEntity.id = newId
                 for field in Self.fields {
                     if let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]?>, let refType = Self.manyToManyRefs[keyPath] {
-                        if refType.firstIdType.tableName == refType.secondIdType.tableName {
+                        if refType.firstIdType.registerName == refType.secondIdType.registerName {
                             throw CSCoreDBError.joinError
                         }
-                        let refField = refType.firstIdType.tableName == Self.tableName ? "firstId" : "secondId"
+                        let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
                         let joinField = refField == "firstId" ? "secondId" : "firstId"
                         guard let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]> else {
                             throw CSCoreDBError.joinError
@@ -158,10 +158,10 @@ public extension CSManyToManyEntityProtocol {
         try currentConnection.transaction {
             for field in Self.fields {
                 if let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]?>, let refType = Self.manyToManyRefs[keyPath] {
-                    if refType.firstIdType.tableName == refType.secondIdType.tableName {
+                    if refType.firstIdType.registerName == refType.secondIdType.registerName {
                         throw CSCoreDBError.joinError
                     }
-                    let refField = refType.firstIdType.tableName == Self.tableName ? "firstId" : "secondId"
+                    let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
                     try currentConnection.sql("DELETE FROM \(refType.tableName) WHERE \(refField) = \(id)")
                 }
             }

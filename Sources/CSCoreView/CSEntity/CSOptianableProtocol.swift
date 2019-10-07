@@ -6,15 +6,32 @@
 //
 
 public protocol CSOptionableProtocol {
-    static var tableName: String { get }
-    static var optionField: AnyKeyPath { get }
     static var registerName: String { get }
     static func options() -> [UInt64:String]
-    static func view() throws -> CSView
+}
+
+public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
+    func getName() -> String?
+}
+
+public extension CSOptionableEnumProtocol where Self: RawRepresentable, Self.RawValue == Int {
+    static func options() -> [UInt64:String] {
+        var res: [UInt64:String] = [:]
+        if let allCases = Self.allCases as? [Self] {
+            for option in allCases {
+                guard let name = option.getName() else {
+                    continue
+                }
+                res[UInt64(option.rawValue)] = name
+            }
+        }
+        return res
+    }
 }
 
 public protocol CSOptionableEntityProtocol: CSOptionableProtocol {
     associatedtype Entity: CSEntityProtocol
+    static var optionField: AnyKeyPath { get }
 }
 public extension CSOptionableEntityProtocol {
     static func options() -> [UInt64:String] {
