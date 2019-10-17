@@ -34,7 +34,7 @@ public protocol CSManyToManyEntityProtocol: CSManyToManyProtocol {
     static var manyToManyRefs: [KeyPath<Entity, [UInt64]?>: CSManyToManyRefProtocol.Type] { get }
 }
 public extension CSManyToManyEntityProtocol {
-    public static func createRefTypes() throws {
+    static func createRefTypes() throws {
         for (_, type) in Self.manyToManyRefs {
             let createTableQuery = """
             CREATE TABLE IF NOT EXISTS `\(type.tableName)` (
@@ -43,7 +43,7 @@ public extension CSManyToManyEntityProtocol {
             `secondId` bigint(20) UNSIGNED NOT NULL,
             PRIMARY KEY (`id`))
             """
-            try Entity.db?.sql(createTableQuery)
+            try Entity.view().db?.sql(createTableQuery)
         }
     }
     private static func makeGetQuery(whereStirng: String = "") throws -> String {
@@ -77,20 +77,20 @@ public extension CSManyToManyEntityProtocol {
         }
         return select + from + join + " " + whereStirng + " " + groupBy
     }
-    public static func getAll() throws -> [CSManyToManyProtocol] {
-        if let r = try Entity.db?.sql(Self.makeGetQuery(), Entity.self) as? [CSManyToManyProtocol] {
+    static func getAll() throws -> [CSManyToManyProtocol] {
+        if let r = try Entity.view().db?.sql(Self.makeGetQuery(), Entity.self) as? [CSManyToManyProtocol] {
             return r
         }
         return []
     }
-    public static func get(id: UInt64) throws -> CSManyToManyProtocol {
-        guard let e = try Entity.db?.sql(Self.makeGetQuery(whereStirng: "WHERE m.id = \(id)"), Entity.self).first as? CSManyToManyProtocol else {
+    static func get(id: UInt64) throws -> CSManyToManyProtocol {
+        guard let e = try Entity.view().db?.sql(Self.makeGetQuery(whereStirng: "WHERE m.id = \(id)"), Entity.self).first as? CSManyToManyProtocol else {
             throw CSCoreDBError.joinError
         }
         return e
     }
-    public static func save(entity: CSManyToManyProtocol) throws -> CSManyToManyProtocol {
-        guard var dbEntity = entity as? Entity, let currentConnection = Entity.db else {
+    static func save(entity: CSManyToManyProtocol) throws -> CSManyToManyProtocol {
+        guard var dbEntity = entity as? Entity, let currentConnection = Entity.view().db else {
             throw CSCoreDBError.joinError
         }
         if dbEntity.id > 0 {
@@ -151,8 +151,8 @@ public extension CSManyToManyEntityProtocol {
             return try Self.get(id: dbEntity.id)
         }
     }
-    public static func delete(_ id: UInt64) throws {
-        guard let currentConnection = Entity.db else {
+    static func delete(_ id: UInt64) throws {
+        guard let currentConnection = Entity.view().db else {
             throw CSCoreDBError.joinError
         }
         try currentConnection.transaction {
@@ -168,7 +168,7 @@ public extension CSManyToManyEntityProtocol {
             try currentConnection.table(Entity.self).where(\Entity.id == id).delete()
         }
     }
-    public static func find(criteria: [String: Any]) -> [CSManyToManyProtocol] {
+    static func find(criteria: [String: Any]) -> [CSManyToManyProtocol] {
         if criteria.count > 0 {
             var whereString: String = "WHERE "
             var i: Int = 0
@@ -179,17 +179,18 @@ public extension CSManyToManyEntityProtocol {
                 whereString += "\(key) = '\(value)' "
                 i += 1
             }
-            if let r = try? Entity.db?.sql(Self.makeGetQuery(whereStirng: whereString), Entity.self) as? [CSManyToManyProtocol] {
-                return r ?? []
+            if let r = try? Entity.view().db?.sql(Self.makeGetQuery(whereStirng: whereString), Entity.self) as? [CSManyToManyProtocol] {
+                return r 
             }
         }
         return []
     }
     static func search(query: String) -> [CSManyToManyProtocol] {
-        if Entity.searchableFields.count > 0 {
+        let view = Entity.view()
+        if view.searchableFields.count > 0 {
             var whereString: String = "WHERE "
             var i: Int = 0
-            for sField in Entity.searchableFields {
+            for sField in view.searchableFields {
                 for field in Self.fields {
                     if field.keyPath == sField {
                         if i > 0 {
@@ -203,8 +204,8 @@ public extension CSManyToManyEntityProtocol {
             if i == 0 {
                 return []
             }
-            if let r = try? Entity.db?.sql(Self.makeGetQuery(whereStirng: whereString), Entity.self) as? [CSManyToManyProtocol] {
-                return r ?? []
+            if let r = try? view.db?.sql(Self.makeGetQuery(whereStirng: whereString), Entity.self) as? [CSManyToManyProtocol] {
+                return r
             }
         }
         return []

@@ -7,8 +7,8 @@
 
 import PerfectCRUD
 
-public extension CSEntityProtocol {
-    private static func createExpression(_ anyKeyPath: AnyKeyPath, value: Any) -> CRUDBooleanExpression? {
+public extension CSViewProtocol {
+    private func createExpression(_ anyKeyPath: AnyKeyPath, value: Any) -> CRUDBooleanExpression? {
         switch (anyKeyPath, value) {
         case let (fk, fv) as (KeyPath<Entity, String>, String):
             return fk == fv
@@ -24,8 +24,8 @@ public extension CSEntityProtocol {
             return nil
         }
     }
-    public static func find(criteria: [String: Any]) -> [CSBaseEntityProtocol] {
-        var res: [CSBaseEntityProtocol] = []
+    func find(criteria: [String: Any]) -> [Entity] {
+        var res: [Entity] = []
         do {
             var keyPathsValues: [AnyKeyPath: Any] = [:]
             for (key, value) in criteria {
@@ -34,7 +34,7 @@ public extension CSEntityProtocol {
                         keyPathsValues[\Entity.id] = UInt64(v)
                     }
                 }
-                for field in Self.fields {
+                for field in self.fields {
                     if field.name == key {
                         keyPathsValues[field.keyPath] = value
                     }
@@ -42,13 +42,13 @@ public extension CSEntityProtocol {
             }
             if keyPathsValues.count > 0 {
                 let first = keyPathsValues.remove(at: keyPathsValues.startIndex)
-                if var expression = Self.createExpression(first.key, value: first.value) {
+                if var expression = self.createExpression(first.key, value: first.value) {
                     for (anyKeyPath, value) in keyPathsValues {
-                        if let curExpr = Self.createExpression(anyKeyPath, value: value) {
+                        if let curExpr = self.createExpression(anyKeyPath, value: value) {
                             expression = expression && curExpr
                         }
                     }
-                    if let result = try Self.table?.where(expression).select().map({ $0 }) {
+                    if let result = try self.table?.where(expression).select().map({ $0 }) {
                         res = result
                     }
                 }

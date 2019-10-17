@@ -10,17 +10,15 @@ import PerfectCRUD
 import PerfectMySQL
 
 public protocol CSDatabaseProtocol {
-    associatedtype Entity: CSBaseEntityProtocol
-    static var db: Database<MySQLDatabaseConfiguration>? { get }
-    static var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? { get }
+    associatedtype Entity: CSEntityProtocol
+    var db: Database<MySQLDatabaseConfiguration>? { get }
+    var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? { get }
 }
 public extension CSDatabaseProtocol {
-    public static var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? {
-        return Self.db?.table(Entity.self)
+    var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? {
+        self.db?.table(Entity.self)
     }
-    
-    
-    public static var db: Database<MySQLDatabaseConfiguration>? {
+    var db: Database<MySQLDatabaseConfiguration>? {
         let dbConfiguration = CSCoreDB (
             host: "127.0.0.1",
             username: "bmserver",
