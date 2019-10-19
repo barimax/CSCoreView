@@ -7,7 +7,7 @@
 
 import PerfectCRUD
 
-public extension CSViewProtocol {
+public extension CSViewDatabaseProtocol {
     func search(query: String) -> [Entity] {
         var res: [Entity]  = []
         do {

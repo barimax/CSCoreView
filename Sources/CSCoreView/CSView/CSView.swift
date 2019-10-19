@@ -9,13 +9,12 @@ import PerfectCRUD
 import PerfectMySQL
 
 
-public struct CSView: CSViewProtocol {
-    public var entity: TestEntity?
-    public var rows: [TestEntity]?
-    
-    
+public struct CSView: CSViewDatabaseProtocol {
     public typealias Entity = TestEntity
-    public static var tableName: String = ""
+    
+    public var rows: [CSEntityProtocol] = []
+    public var entity: CSEntityProtocol?
+
     public var singleName: String = ""
     public var pluralName: String = ""
     public var fields: [CSPropertyDescription] = []
@@ -26,12 +25,7 @@ public struct CSView: CSViewProtocol {
     }
 }
 public struct TestEntity: CSEntityProtocol {
+    public static var tableName: String = ""
     public var id: UInt64 = 0
-    
-    public static func view() -> CSView {
-        CSView()
-    }
-    
-    
 }
 

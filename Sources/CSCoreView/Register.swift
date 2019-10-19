@@ -15,7 +15,7 @@ public extension CSRegisterProtocol {
     static func add(forKey: String, type: CSEntityProtocol.Type) {
         Self.store[forKey] = type
     }
-    static func getView(forKey: String) throws -> some CSViewProtocol {
+    static func getView(forKey: String) throws -> CSViewProtocol {
         guard let type = Self.store[forKey] else {
             throw CSViewError.registerError(message: "Not found type")
         }
@@ -35,3 +35,5 @@ public extension CSRegisterProtocol {
 public struct CSRegister: CSRegisterProtocol {
     public static var store: [String: CSEntityProtocol.Type] = [:]
 }
+
+

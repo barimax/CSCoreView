@@ -6,8 +6,9 @@
 //
 import Foundation
 import PerfectCRUD
+import PerfectMySQL
 
-public protocol CSViewProtocol: Encodable, CSDatabaseProtocol, TableNameProvider {
+public protocol CSViewProtocol {
     var refs: [String:String] { get }
     var registerName: String { get }
     var singleName: String { get }
@@ -17,17 +18,16 @@ public protocol CSViewProtocol: Encodable, CSDatabaseProtocol, TableNameProvider
     var refOptions: [String:CSRefOptionField] { get }
     var backRefs: [CSBackRefs] { get }
     
-    var entity: Entity? { get set }
-    var rows: [Entity]? { get set}
+    var entity: CSEntityProtocol? { get set }
+    var rows: [CSEntityProtocol] { get set}
     
-    
+    var db: Database<MySQLDatabaseConfiguration>? { get }
+    func create() throws
     mutating func loadAll() throws
     mutating func load(id: UInt64) throws
-    mutating func save(entity: Entity) throws
+    mutating func save<E: CSEntityProtocol>(entity: E) throws
     mutating func delete(id: UInt64) throws
     mutating func delete() throws
-    
-
 }
 
 public extension CSViewProtocol {
@@ -39,46 +39,6 @@ public extension CSViewProtocol {
             }
         }
         return res
-    }
-}
-public extension CSViewProtocol {
-    func create() throws {
-        try self.db?.create(Entity.self, policy: .shallow)
-    }
-    
-    mutating func loadAll() throws {
-        guard let entities = try self.table?.select().map({ $0 }) else {
-            throw CSCoreDBError.entityNotFound
-        }
-        self.rows = entities
-    }
-    mutating func load(id: UInt64) throws {
-        guard let entity: Entity = try self.table?.where(\Entity.id == id).first() else {
-            throw CSCoreDBError.entityNotFound
-        }
-        self.entity = entity
-    }
-    mutating func save(entity: Entity) throws {
-        var newEntity: Entity = entity
-        if newEntity.id > 0 {
-            try self.table?.where(\Entity.id == newEntity.id).update(newEntity)
-        }else{
-            guard let newId: UInt64 = try self.table?.insert(newEntity).lastInsertId() else {
-                throw CSCoreDBError.saveError(message: "No new ID.")
-            }
-            newEntity.id = newId
-        }
-        self.entity = newEntity
-    }
-    mutating func delete(id: UInt64) throws {
-        try self.table?.where(\Entity.id == id).delete()
-        self.entity = nil
-    }
-    mutating func delete() throws {
-        guard let entity = self.entity else {
-            throw CSCoreDBError.deleteError
-        }
-        try self.delete(id: entity.id)
     }
 }
 public extension CSViewProtocol {
@@ -117,3 +77,45 @@ public extension CSViewProtocol {
         return res
     }
 }
+public protocol CSViewDatabaseProtocol: CSViewProtocol, CSDatabaseProtocol {}
+public extension CSViewDatabaseProtocol {
+    func create() throws {
+        try self.db?.create(Entity.self, policy: .shallow)
+    }
+    
+    mutating func loadAll() throws {
+        guard let entities = try self.table?.select().map({ $0 }) else {
+            throw CSCoreDBError.entityNotFound
+        }
+        self.rows = entities
+    }
+    mutating func load(id: UInt64) throws {
+        guard let entity: Entity = try self.table?.where(\Entity.id == id).first() else {
+            throw CSCoreDBError.entityNotFound
+        }
+        self.entity = entity
+    }
+    mutating func save<E: CSEntityProtocol>(entity: E) throws {
+        var newEntity: E = entity
+        if newEntity.id > 0 {
+            try self.db?.table(E.self).where(\Entity.id == newEntity.id).update(newEntity)
+        }else{
+            guard let newId: UInt64 = try self.db?.table(E.self).insert(newEntity).lastInsertId() else {
+                throw CSCoreDBError.saveError(message: "No new ID.")
+            }
+            newEntity.id = newId
+        }
+        self.entity = newEntity
+    }
+    mutating func delete(id: UInt64) throws {
+        try self.table?.where(\Entity.id == id).delete()
+        self.entity = nil
+    }
+    mutating func delete() throws {
+        guard let entity = self.entity else {
+            throw CSCoreDBError.deleteError
+        }
+        try self.delete(id: entity.id)
+    }
+}
+
