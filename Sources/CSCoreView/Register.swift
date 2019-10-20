@@ -22,12 +22,11 @@ public extension CSRegisterProtocol {
         return type.view()
     }
     static func setup() throws {
-        for (_, rs) in CSRegister.store {
-            if let entity = rs as? CSEntityProtocol.Type {
-                try entity.view().create()
-                if let mtm = entity as? CSManyToManyProtocol.Type {
-                    try mtm.createRefTypes()
-                }
+        for (_, entity) in CSRegister.store {
+            let view = entity.view()
+            try view.create()
+            if let mtm = view as? CSMTMProtocol {
+                try mtm.createRefTypes()
             }
         }
     }

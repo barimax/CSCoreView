@@ -24,7 +24,7 @@ public extension CSViewDatabaseProtocol {
             return nil
         }
     }
-    func find(criteria: [String: Any]) -> [Entity] {
+    func find(criteria: [String: Any]) -> [CSEntityProtocol] {
         var res: [Entity] = []
         do {
             var keyPathsValues: [AnyKeyPath: Any] = [:]

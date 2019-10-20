@@ -8,7 +8,7 @@
 import PerfectCRUD
 
 public extension CSViewDatabaseProtocol {
-    func search(query: String) -> [Entity] {
+    func search(query: String) -> [CSEntityProtocol] {
         var res: [Entity]  = []
         do {
             if self.searchableFields.count > 0 {

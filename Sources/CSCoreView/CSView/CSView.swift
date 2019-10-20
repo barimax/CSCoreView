@@ -18,7 +18,7 @@ public struct CSView: CSViewDatabaseProtocol {
     public var singleName: String = ""
     public var pluralName: String = ""
     public var fields: [CSPropertyDescription] = []
-    public var registerName: String = ""
+    public static var registerName: String = ""
     
     public var searchableFields: [AnyKeyPath] {
         []
@@ -27,5 +27,8 @@ public struct CSView: CSViewDatabaseProtocol {
 public struct TestEntity: CSEntityProtocol {
     public static var tableName: String = ""
     public var id: UInt64 = 0
+    public static func view() -> CSViewProtocol {
+        CSView()
+    }
 }
 
