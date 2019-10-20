@@ -19,19 +19,19 @@ public extension CSViewDatabaseProtocol {
         try self.db?.create(Entity.self, policy: .shallow)
     }
     
-    mutating func loadAll() throws {
+    func getAll() throws -> [CSEntityProtocol] {
         guard let entities = try self.table?.select().map({ $0 }) else {
             throw CSCoreDBError.entityNotFound
         }
-        self.rows = entities
+        return entities
     }
-    mutating func load(id: UInt64) throws {
+    func get(id: UInt64) throws -> CSEntityProtocol {
         guard let entity: Entity = try self.table?.where(\Entity.id == id).first() else {
             throw CSCoreDBError.entityNotFound
         }
-        self.entity = entity
+        return entity
     }
-    mutating func save(entity: CSEntityProtocol) throws {
+    func save(entity: CSEntityProtocol) throws -> CSEntityProtocol {
         guard var newEntity = entity as? Entity else {
             throw CSCoreDBError.saveError(message: "Not entity")
         }
@@ -44,16 +44,9 @@ public extension CSViewDatabaseProtocol {
             }
             newEntity.id = newId
         }
-        self.entity = newEntity
+        return newEntity
     }
-    mutating func delete(id: UInt64) throws {
+    func delete(id: UInt64) throws {
         try self.table?.where(\Entity.id == id).delete()
-        self.entity = nil
-    }
-    mutating func delete() throws {
-        guard let entity = self.entity else {
-            throw CSCoreDBError.deleteError
-        }
-        try self.delete(id: entity.id)
     }
 }

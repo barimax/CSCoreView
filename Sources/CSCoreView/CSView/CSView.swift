@@ -10,11 +10,8 @@ import PerfectMySQL
 
 
 public struct CSView: CSViewDatabaseProtocol {
-    public typealias Entity = TestEntity
     
-    public var rows: [CSEntityProtocol] = []
-    public var entity: CSEntityProtocol?
-
+    public typealias Entity = TestEntity
     public var singleName: String = ""
     public var pluralName: String = ""
     public var fields: [CSPropertyDescription] = []

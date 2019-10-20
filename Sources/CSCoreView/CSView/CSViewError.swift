@@ -10,5 +10,7 @@ enum CSViewError: Error {
     case registerError(message: String)
     case findError
     case searchError
+    case noEntity
+    case differentType
 }
 

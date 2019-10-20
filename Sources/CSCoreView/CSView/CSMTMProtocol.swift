@@ -75,18 +75,19 @@ public extension CSMTMViewProtocol {
         }
         return select + from + join + " " + whereStirng + " " + groupBy
     }
-    mutating func loadAll() throws  {
-        if let rows = try Entity.view().db?.sql(self.makeGetQuery(), Entity.self) {
-            self.rows = rows
+    func getAll() throws -> [CSEntityProtocol]  {
+        guard let rows = try Entity.view().db?.sql(self.makeGetQuery(), Entity.self) else {
+            throw CSCoreDBError.joinError
         }
+        return rows
     }
-    mutating func load(id: UInt64) throws {
+    func get(id: UInt64) throws -> CSEntityProtocol {
         guard let e = try Entity.view().db?.sql(self.makeGetQuery(whereStirng: "WHERE m.id = \(id)"), Entity.self).first else {
             throw CSCoreDBError.joinError
         }
-        self.entity = e
+        return e
     }
-    mutating func save(entity: CSEntityProtocol) throws {
+    func save(entity: CSEntityProtocol) throws -> CSEntityProtocol {
         guard var dbEntity = entity as? Entity, let currentConnection = self.db else {
             throw CSCoreDBError.joinError
         }
@@ -116,7 +117,7 @@ public extension CSMTMViewProtocol {
                 }
                 try currentConnection.table(Entity.self).update(dbEntity)
             }
-            try self.load(id: dbEntity.id)
+            return try self.get(id: dbEntity.id)
         }else{
             try currentConnection.transaction {
                 guard let newId: UInt64 = try currentConnection.table(Entity.self).insert(dbEntity).lastInsertId() else {
@@ -149,16 +150,10 @@ public extension CSMTMViewProtocol {
                     }
                 }
             }
-            try self.load(id: dbEntity.id)
+            return try self.get(id: dbEntity.id)
         }
     }
-    mutating func delete() throws {
-        guard let entity = self.entity else {
-            throw CSCoreDBError.deleteError
-        }
-        try self.delete(id: entity.id)
-    }
-    mutating func delete(_ id: UInt64) throws {
+    func delete(_ id: UInt64) throws {
         guard let currentConnection = self.db else {
             throw CSCoreDBError.joinError
         }
@@ -174,7 +169,6 @@ public extension CSMTMViewProtocol {
             }
             try currentConnection.table(Entity.self).where(\Entity.id == id).delete()
         }
-        self.entity = nil
     }
     func find(criteria: [String: Any]) -> [CSEntityProtocol] {
         if criteria.count > 0 {

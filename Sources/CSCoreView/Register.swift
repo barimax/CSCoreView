@@ -7,21 +7,24 @@
 
 import Foundation
 
-public protocol CSRegisterProtocol {
-    static var store: [String: CSEntityProtocol.Type] { get set }
-    static func setup() throws
-}
-public extension CSRegisterProtocol {
+public class CSRegister {
+    static var store: [String: CSEntityProtocol.Type] = [:]
     static func add(forKey: String, type: CSEntityProtocol.Type) {
         Self.store[forKey] = type
     }
-    static func getView(forKey: String) throws -> CSViewProtocol {
+    public static func getView(forKey: String) throws -> CSViewProtocol {
         guard let type = Self.store[forKey] else {
             throw CSViewError.registerError(message: "Not found type")
         }
         return type.view()
     }
-    static func setup() throws {
+    public static func getType(forKey: String) throws -> CSEntityProtocol.Type {
+        guard let type = Self.store[forKey] else {
+            throw CSViewError.registerError(message: "Not found type")
+        }
+        return type
+    }
+    public static func setup() throws {
         for (_, entity) in CSRegister.store {
             let view = entity.view()
             try view.create()
@@ -30,9 +33,6 @@ public extension CSRegisterProtocol {
             }
         }
     }
-}
-public struct CSRegister: CSRegisterProtocol {
-    public static var store: [String: CSEntityProtocol.Type] = [:]
 }
 
 
