@@ -69,7 +69,7 @@ public class CSEntity: Encodable {
             if !result.isEmpty {
                 allowDelete = false
                 refEntity.rows = result
-                guard let optionable = refEntity.view as? CSOptionableProtocol.Type else {
+                guard let optionable = refEntity.view as? CSOptionableFieldProtocol.Type else {
                     throw CSViewError.searchError
                 }
                 let optionFieldName: String? = refEntity.view.fields.first(where: { f in
