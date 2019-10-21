@@ -8,6 +8,7 @@
 public protocol CSOptionableProtocol {
     static var registerName: String { get }
     static func options() -> [UInt64:String]
+    static var optionField: AnyKeyPath { get }
 }
 
 public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
@@ -31,7 +32,6 @@ public extension CSOptionableEnumProtocol where Self: RawRepresentable, Self.Raw
 
 public protocol CSOptionableEntityProtocol: CSOptionableProtocol {
     associatedtype Entity: CSEntityProtocol
-    static var optionField: AnyKeyPath { get }
 }
 public extension CSOptionableEntityProtocol {
     static func options() -> [UInt64:String] {

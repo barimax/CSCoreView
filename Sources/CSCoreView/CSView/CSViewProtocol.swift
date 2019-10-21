@@ -52,3 +52,4 @@ enum CSViewCodingKeys: String, CodingKey {
     case refs, singleName, pluralName, fields, refOptions, backRefs, registerName
 }
 
+

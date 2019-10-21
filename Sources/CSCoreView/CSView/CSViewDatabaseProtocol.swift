@@ -50,3 +50,4 @@ public extension CSViewDatabaseProtocol {
         try self.table?.where(\Entity.id == id).delete()
     }
 }
+

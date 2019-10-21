@@ -9,7 +9,7 @@ import Foundation
 
 public class CSRegister {
     static var store: [String: CSEntityProtocol.Type] = [:]
-    static func add(forKey: String, type: CSEntityProtocol.Type) {
+    public static func add(forKey: String, type: CSEntityProtocol.Type) {
         Self.store[forKey] = type
     }
     public static func getView(forKey: String) throws -> CSViewProtocol {
