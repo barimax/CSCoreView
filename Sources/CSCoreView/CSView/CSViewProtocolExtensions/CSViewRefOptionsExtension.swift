@@ -28,7 +28,7 @@ public extension CSViewProtocol {
                 let refOption: CSRefOptionField = CSRefOptionField(
                     registerName: ref.registerName,
                     options: ref.options(),
-                    isButton: false
+                    isButton: ref is CSOptionableFieldProtocol
                 )
                 result[field.name] = refOption
             }

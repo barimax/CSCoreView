@@ -62,8 +62,8 @@ public extension CSMTMViewProtocol {
                     let joinTableName = joinType.tableName
                     
                     
-                    let f = refType.firstIdType.registerName == mainTableName ? "firstId" : "secondId"
-                    let s = refType.secondIdType.registerName == joinTableName ? "secondId" : "firstId"
+                    let f = refType.firstIdType.registerName == Self.registerName ? "firstId" : "secondId"
+                    let s = f == "firstId" ? "secondId" : "firstId"
                     
                     select += ", IF(GROUP_CONCAT(DISTINCT j\(joinNum).id) IS NULL, \"[]\", CONCAT(\"[\", GROUP_CONCAT(DISTINCT j\(joinNum).id), \"]\")) AS \(field.name) "
                     join += " " + """
@@ -98,7 +98,7 @@ public extension CSMTMViewProtocol {
                         if refType.firstIdType.registerName == refType.secondIdType.registerName {
                             throw CSCoreDBError.joinError
                         }
-                        let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
+                        let refField = refType.firstIdType.registerName == Self.registerName ? "firstId" : "secondId"
                         let joinField = refField == "firstId" ? "secondId" : "firstId"
                         try currentConnection.sql("DELETE FROM \(refType.tableName) WHERE \(refField) = \(dbEntity.id)")
                         guard let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]> else {
@@ -129,10 +129,8 @@ public extension CSMTMViewProtocol {
                         if refType.firstIdType.registerName == refType.secondIdType.registerName {
                             throw CSCoreDBError.joinError
                         }
-                        let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
+                        let refField = refType.firstIdType.registerName == Self.registerName ? "firstId" : "secondId"
                         let joinField = refField == "firstId" ? "secondId" : "firstId"
-                        print("HERE")
-                        print(field.keyPath)
                         guard let keyPath = field.keyPath as? KeyPath<Entity, [UInt64]?>,
                             let values = dbEntity[keyPath: keyPath] else {
                             throw CSCoreDBError.joinError
@@ -163,7 +161,7 @@ public extension CSMTMViewProtocol {
                     if refType.firstIdType.registerName == refType.secondIdType.registerName {
                         throw CSCoreDBError.joinError
                     }
-                    let refField = refType.firstIdType.registerName == Self.tableName ? "firstId" : "secondId"
+                    let refField = refType.firstIdType.registerName == Self.registerName ? "firstId" : "secondId"
                     try currentConnection.sql("DELETE FROM \(refType.tableName) WHERE \(refField) = \(id)")
                 }
             }

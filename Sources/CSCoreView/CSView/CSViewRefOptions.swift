@@ -11,6 +11,11 @@ public struct CSRefOptionField: Codable {
     public let registerName: String
     public let options: [UInt64:String]
     public var isButton: Bool
+    public init(registerName: String, options: [UInt64: String], isButton: Bool) {
+        self.registerName = registerName
+        self.options = options
+        self.isButton = isButton
+    }
 }
 public struct CSBackRefs: Codable {
     var registerName: String = ""
@@ -20,4 +25,5 @@ public struct CSBackRefs: Codable {
     var pluralName: String = ""
     var createNewByMultiple: Bool = false
     var createNewByMultipleFields: [String] = []
+    public init() {}
 }
