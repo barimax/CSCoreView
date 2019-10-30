@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol CSCustomOptionsProtocol {
-    var customOptions: [AnyKeyPath: () -> [UInt64: String]] { get }
+    func customOptions(keyPath: AnyKeyPath) -> [UInt64: String]?
 }

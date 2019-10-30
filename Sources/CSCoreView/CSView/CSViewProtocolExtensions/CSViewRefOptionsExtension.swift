@@ -24,17 +24,14 @@ public extension CSViewProtocol {
         
         for field in self.fields {
             if let ref = field.ref  {
-                if let customOptionsObject = self as? CSCustomOptionsProtocol {
-                    for (keyPath, options) in customOptionsObject.customOptions {
-                        if keyPath == field.keyPath {
-                            let refOption: CSRefOptionField = CSRefOptionField(
-                                registerName: ref.registerName,
-                                options: options(),
-                                isButton: ref is CSOptionableFieldProtocol
-                            )
-                            result[field.name] = refOption
-                        }
-                    }
+                if let customOptionsObject = self as? CSCustomOptionsProtocol,
+                    let customOptions = customOptionsObject.customOptions(keyPath: field.keyPath) {
+                    let refOption: CSRefOptionField = CSRefOptionField(
+                        registerName: ref.registerName,
+                        options: customOptions,
+                        isButton: ref is CSOptionableFieldProtocol
+                    )
+                    result[field.name] = refOption
                 }else{
                     let refOption: CSRefOptionField = CSRefOptionField(
                         registerName: ref.registerName,
