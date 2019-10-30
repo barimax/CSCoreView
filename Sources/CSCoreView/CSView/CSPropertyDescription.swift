@@ -14,7 +14,8 @@ public struct CSPropertyDescription: Encodable {
     colWidth: ColWidth,
     name: String,
     required: Bool,
-    ref: CSOptionableProtocol.Type?
+    ref: CSOptionableProtocol.Type?,
+    order: Int
     
     public init(
         keyPath: AnyKeyPath,
@@ -23,7 +24,8 @@ public struct CSPropertyDescription: Encodable {
         jsType: JSType = .string,
         colWidth: ColWidth = .normal,
         name: String = "name",
-        required: Bool = true
+        required: Bool = true,
+        order: Int = 0
         ){
         
         self.keyPath = keyPath
@@ -33,6 +35,7 @@ public struct CSPropertyDescription: Encodable {
         self.name = name
         self.required = required
         self.ref = ref
+        self.order = order
     }
     // Codable keys
     enum CodingKeys: String, CodingKey {

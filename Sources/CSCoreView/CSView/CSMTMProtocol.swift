@@ -22,11 +22,6 @@ public protocol CSMTMProtocol {
     static var registerName: String { get }
     var fields: [CSPropertyDescription] { get }
     func createRefTypes() throws
-//    static func load(id: UInt64) throws -> CSMTMProtocol
-//    static func save(entity: CSMTMProtocol) throws -> CSMTMProtocol
-//    static func delete(_ id: UInt64) throws
-//    static func find(criteria: [String: Any]) -> [CSMTMProtocol]
-//    static func search(query: String) -> [CSMTMProtocol]
 }
 public protocol CSMTMViewProtocol: CSViewDatabaseProtocol, CSMTMProtocol {
     var mtmRefs: [KeyPath<Entity, [UInt64]?>: CSMTMRefProtocol.Type] { get }
