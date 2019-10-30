@@ -8,6 +8,7 @@
 public protocol CSOptionableProtocol {
     static var registerName: String { get }
     static func options() -> [UInt64:String]
+    static var isButton: Bool { get }
 }
 
 public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
@@ -26,6 +27,9 @@ public extension CSOptionableEnumProtocol where Self: RawRepresentable, Self.Raw
             }
         }
         return res
+    }
+    static var isButton: Bool {
+        false
     }
 }
 public protocol CSOptionableFieldProtocol: CSOptionableProtocol {
@@ -50,5 +54,8 @@ public extension CSOptionableEntityProtocol {
             print(error)
         }
         return res
+    }
+    static var isButton: Bool {
+        true
     }
 }
