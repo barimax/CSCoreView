@@ -120,6 +120,13 @@ public class CSEntity: Encodable {
     public func saveAndLoad(entity: CSEntityProtocol) throws {
         self.entity = try self.save(entity: entity)
     }
+    /// Recalculate entity
+    public func recalculate(entity: CSEntityProtocol) -> CSEntityProtocol {
+        if let recalculatable = self.view as? CSRecalculatedProtocol {
+            return recalculatable.recalculate(entity)
+        }
+        return entity
+    }
 }
 struct DecodableWrapper: Decodable {
     static var baseType: Decodable.Type!
