@@ -1,7 +1,7 @@
 import PerfectCRUD
 import PerfectMySQL
 
-public class CSCoreDB {
+public struct CSCoreDB {
     public let host: String
     public let username: String
     public let password: String
@@ -19,18 +19,6 @@ public class CSCoreDB {
         self.password = password
         self.database = database
     }
-    
-//    func connect() throws -> Database<MySQLDatabaseConfiguration> {
-//        return try Database(
-//            configuration: MySQLDatabaseConfiguration(
-//                database: self.database,
-//                host: self.host,
-//                port: self.port,
-//                username: self.username,
-//                password: self.password
-//            )
-//        )
-//    }
 }
 
 public struct CSCoreDBConfig {

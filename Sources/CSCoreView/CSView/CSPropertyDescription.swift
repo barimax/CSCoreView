@@ -67,7 +67,9 @@ public enum FieldType: String, Codable {
     checkbox,
     date,
     time,
-    `switch`
+    `switch`,
+    password,
+    email
 }
 
 public enum ColWidth: Int, Codable {
