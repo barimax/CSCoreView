@@ -8,8 +8,8 @@ import Foundation
 import PerfectCRUD
 import PerfectMySQL
 
-public protocol CSViewProtocol: TableNameProvider, Encodable {
-    static var registerName: String { get }
+public protocol CSViewProtocol:  TableNameProvider, Encodable {
+    var registerName: String { get }
     var refs: [String:String] { get }
     var singleName: String { get }
     var pluralName: String { get }
@@ -19,6 +19,8 @@ public protocol CSViewProtocol: TableNameProvider, Encodable {
     var backRefs: [CSBackRefs] { get }
     
     var db: Database<MySQLDatabaseConfiguration>? { get }
+    var database: String? { get set }
+    
     func create() throws
     func getAll() throws -> [CSEntityProtocol]
     func get(id: UInt64) throws -> CSEntityProtocol
@@ -31,6 +33,9 @@ public protocol CSViewProtocol: TableNameProvider, Encodable {
     func encode(to encoder: Encoder) throws
 }
 public extension CSViewProtocol {
+    
+}
+public extension CSViewProtocol {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CSViewCodingKeys.self)
         try container.encode(refs, forKey: .refs)
@@ -39,7 +44,7 @@ public extension CSViewProtocol {
         try container.encode(fields, forKey: .fields)
         try container.encode(refOptions, forKey: .refOptions)
         try container.encode(backRefs, forKey: .backRefs)
-        try container.encode(Self.registerName, forKey: .singleName)
+        try container.encode(registerName, forKey: .singleName)
     }
     func toJSON() throws -> String {
         guard let str = try String(data: JSONEncoder().encode(self), encoding: .utf8) else {

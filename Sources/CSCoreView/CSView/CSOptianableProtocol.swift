@@ -15,10 +15,10 @@ public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
     func getName() -> String?
 }
 
-public extension CSOptionableEnumProtocol where Self: RawRepresentable, Self.RawValue == Int {
+public extension CSViewDatabaseProtocol where Entity: RawRepresentable, Entity: CSOptionableEnumProtocol, Entity.RawValue == Int {
     static func options() -> [UInt64:String] {
         var res: [UInt64:String] = [:]
-        if let allCases = Self.allCases as? [Self] {
+        if let allCases = Entity.allCases as? [Entity] {
             for option in allCases {
                 guard let name = option.getName() else {
                     continue
@@ -32,18 +32,14 @@ public extension CSOptionableEnumProtocol where Self: RawRepresentable, Self.Raw
         false
     }
 }
-public protocol CSOptionableFieldProtocol: CSOptionableProtocol {
+public protocol CSOptionableEntityProtocol {
     static var optionField: AnyKeyPath { get }
 }
-
-public protocol CSOptionableEntityProtocol: CSOptionableFieldProtocol {
-    associatedtype Entity: CSEntityProtocol
-}
-public extension CSOptionableEntityProtocol {
+public extension CSViewDatabaseProtocol where Entity: CSOptionableEntityProtocol {
     static func options() -> [UInt64:String] {
         var res: [UInt64: String] = [:]
         do {
-            if let queryResult = try Entity.view().db?.table(Entity.self).select().map({ ($0.id, $0[keyPath: Self.optionField]) }) {
+            if let queryResult = try Entity.view().db?.table(Entity.self).select().map({ ($0.id, $0[keyPath: Entity.optionField]) }) {
                 for (k,v) in queryResult {
                     if let s = v as? String {
                         res[k] = s

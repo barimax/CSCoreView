@@ -15,15 +15,17 @@ public struct CSPropertyDescription: Encodable {
     name: String,
     required: Bool,
     ref: CSOptionableProtocol.Type?,
-    order: Int
+    order: Int,
+    label: String
     
     public init(
         keyPath: AnyKeyPath,
+        name: String,
+        label: String,
         ref: CSOptionableProtocol.Type? = nil,
         fieldType: FieldType = .text,
         jsType: JSType = .string,
         colWidth: ColWidth = .normal,
-        name: String = "name",
         required: Bool = true,
         order: Int = 0
         ){
@@ -36,10 +38,11 @@ public struct CSPropertyDescription: Encodable {
         self.required = required
         self.ref = ref
         self.order = order
+        self.label = label
     }
     // Codable keys
     enum CodingKeys: String, CodingKey {
-        case fieldType, jsType, colWidth, name, required
+        case fieldType, jsType, colWidth, name, required, label
     }
     // Encodable conformance
     public func encode(to encoder: Encoder) throws {
@@ -49,6 +52,7 @@ public struct CSPropertyDescription: Encodable {
         try container.encode(jsType, forKey: .jsType)
         try container.encode(colWidth, forKey: .colWidth)
         try container.encode(required, forKey: .required)
+        try container.encode(label, forKey: .label)
     }
 }
 

@@ -49,9 +49,9 @@ public extension CSViewProtocol {
         for (_,entity) in CSRegister.store {
             let view = entity.view()
             for (field, ref) in view.refs {
-                if ref == Self.registerName {
+                if ref == self.registerName {
                     var backRefs = CSBackRefs()
-                    backRefs.registerName = type(of: view).registerName
+                    backRefs.registerName = view.registerName
                     backRefs.singleName = view.singleName
                     backRefs.pluralName = view.pluralName
                     backRefs.formField = field

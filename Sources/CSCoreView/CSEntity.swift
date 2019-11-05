@@ -32,12 +32,13 @@ public class CSEntity: Encodable {
         try container.encode(EncodableWrapper(self.view), forKey: .view)
     }
     /// Initialize with empty entity
-    public init(registerName rn: String) throws {
+    public init(registerName rn: String, database db: String) throws {
         self.registerName = rn
         self.view = try CSRegister.getView(forKey: rn)
+        self.view.database = db
     }
     /// Initializa with entity
-    public init(registerName rn: String, encodedEntity: String) throws {
+    public init(registerName rn: String, encodedEntity: String, database db: String) throws {
         DecodableWrapper.baseType = try CSRegister.getType(forKey: rn)
         guard let e = try JSONDecoder().decode(DecodableWrapper.self, from: encodedEntity.data(using: .utf8)!).base as? CSEntityProtocol else {
             throw CSViewError.noEntity
@@ -45,6 +46,7 @@ public class CSEntity: Encodable {
         self.registerName = rn
         self.entity = e
         self.view = try CSRegister.getView(forKey: rn)
+        self.view.database = db
     }
     /// Return JSON encoded CSEntity (entity, rows & view)
     public func jsonString() throws -> String {
@@ -64,12 +66,12 @@ public class CSEntity: Encodable {
         var resp: [DeleteResponse] = []
         var allowDelete: Bool = true
         for backRef in self.view.backRefs {
-            let refEntity = try CSEntity(registerName: backRef.registerName)
+            let refEntity = try CSEntity(registerName: backRef.registerName, database: self.view.database!)
             let result = refEntity.find(criteria: [backRef.formField: entityId])
             if !result.isEmpty {
                 allowDelete = false
                 refEntity.rows = result
-                guard let optionable = refEntity.view as? CSOptionableFieldProtocol.Type else {
+                guard let optionable = refEntity.view as? CSOptionableEntityProtocol.Type else {
                     throw CSViewError.searchError
                 }
                 let optionFieldName: String? = refEntity.view.fields.first(where: { f in
