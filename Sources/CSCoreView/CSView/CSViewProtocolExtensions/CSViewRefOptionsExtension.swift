@@ -9,7 +9,7 @@ import Foundation
 import PerfectCRUD
 import PerfectMySQL
 
-public extension CSViewProtocol {
+extension CSViewProtocol {
     var refs: [String:String] {
         var res: [String:String] = [:]
         for field in self.fields {
@@ -24,7 +24,7 @@ public extension CSViewProtocol {
         
         for field in self.fields {
             if let ref = field.ref  {
-                if let customOptionsObject = self as? CSCustomOptionsProtocol,
+                if let customOptionsObject = ref as? CSCustomOptionsProtocol,
                     let customOptions = customOptionsObject.customOptions(keyPath: field.keyPath) {
                     let refOption: CSRefOptionField = CSRefOptionField(
                         registerName: ref.registerName,
@@ -35,7 +35,7 @@ public extension CSViewProtocol {
                 }else{
                     let refOption: CSRefOptionField = CSRefOptionField(
                         registerName: ref.registerName,
-                        options: ref.options(),
+                        options: ref.options(self.database),
                         isButton: ref.isButton
                     )
                     result[field.name] = refOption
@@ -47,7 +47,7 @@ public extension CSViewProtocol {
     var backRefs: [CSBackRefs] {
         var res: [CSBackRefs] = []
         for (_,entity) in CSRegister.store {
-            let view = entity.view()
+            let view = entity.view(self.database)
             for (field, ref) in view.refs {
                 if ref == self.registerName {
                     var backRefs = CSBackRefs()

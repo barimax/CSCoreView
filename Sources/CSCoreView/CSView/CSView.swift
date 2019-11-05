@@ -9,10 +9,24 @@ import PerfectCRUD
 import PerfectMySQL
 
 
-public struct CSView<E: CSEntityProtocol>: CSViewDatabaseProtocol {
+struct CSView<E: CSEntityProtocol>: CSViewDatabaseProtocol {
     public typealias Entity = E
-    public var database: String?
+    public let database: String
+    
+    init(_ db: String) {
+        self.database = db
+    }
 }
+struct CSMTMView<E: CSMTMEntityProtocol>: CSMTMDatabaseProtocol {
+    
+    public typealias Entity = E
+    public let database: String
+    
+    init(_ db: String) {
+        self.database = db
+    }
+}
+
 public struct TestEntity: CSEntityProtocol {
     public static var registerName: String = "test"
     public static var singleName: String = "Test"

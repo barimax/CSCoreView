@@ -19,7 +19,7 @@ public protocol CSViewProtocol:  TableNameProvider, Encodable {
     var backRefs: [CSBackRefs] { get }
     
     var db: Database<MySQLDatabaseConfiguration>? { get }
-    var database: String? { get set }
+    var database: String { get }
     
     func create() throws
     func getAll() throws -> [CSEntityProtocol]
@@ -29,11 +29,10 @@ public protocol CSViewProtocol:  TableNameProvider, Encodable {
     func find(criteria: [String: Any]) -> [CSEntityProtocol]
     func search(query: String) -> [CSEntityProtocol]
     
+    
+    
     func toJSON() throws -> String
     func encode(to encoder: Encoder) throws
-}
-public extension CSViewProtocol {
-    
 }
 public extension CSViewProtocol {
     func encode(to encoder: Encoder) throws {

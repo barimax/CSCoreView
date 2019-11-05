@@ -34,8 +34,7 @@ public class CSEntity: Encodable {
     /// Initialize with empty entity
     public init(registerName rn: String, database db: String) throws {
         self.registerName = rn
-        self.view = try CSRegister.getView(forKey: rn)
-        self.view.database = db
+        self.view = try CSRegister.getView(forKey: rn, withDatabase: db)
     }
     /// Initializa with entity
     public init(registerName rn: String, encodedEntity: String, database db: String) throws {
@@ -45,8 +44,7 @@ public class CSEntity: Encodable {
         }
         self.registerName = rn
         self.entity = e
-        self.view = try CSRegister.getView(forKey: rn)
-        self.view.database = db
+        self.view = try CSRegister.getView(forKey: rn, withDatabase: db)
     }
     /// Return JSON encoded CSEntity (entity, rows & view)
     public func jsonString() throws -> String {
@@ -66,7 +64,7 @@ public class CSEntity: Encodable {
         var resp: [DeleteResponse] = []
         var allowDelete: Bool = true
         for backRef in self.view.backRefs {
-            let refEntity = try CSEntity(registerName: backRef.registerName, database: self.view.database!)
+            let refEntity = try CSEntity(registerName: backRef.registerName, database: self.view.database)
             let result = refEntity.find(criteria: [backRef.formField: entityId])
             if !result.isEmpty {
                 allowDelete = false
@@ -112,7 +110,7 @@ public class CSEntity: Encodable {
     }
     /// Save given entity and returns saved one
     public func save(entity: CSEntityProtocol) throws -> CSEntityProtocol {
-        if type(of: self.view) == type(of: type(of: entity).view()) {
+        if type(of: self.view) == type(of: type(of: entity).view(self.view.database)) {
             return try self.view.save(entity: entity)
         }else{
             throw CSViewError.differentType

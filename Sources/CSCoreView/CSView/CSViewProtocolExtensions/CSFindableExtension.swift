@@ -7,7 +7,7 @@
 
 import PerfectCRUD
 
-public extension CSViewDatabaseProtocol {
+extension CSViewDatabaseProtocol {
     private func createExpression(_ anyKeyPath: AnyKeyPath, value: Any) -> CRUDBooleanExpression? {
         switch (anyKeyPath, value) {
         case let (fk, fv) as (KeyPath<Entity, String>, String):

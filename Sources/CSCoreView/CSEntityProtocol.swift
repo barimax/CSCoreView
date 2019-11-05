@@ -14,12 +14,12 @@ public protocol CSEntityProtocol: Codable, TableNameProvider {
     static var pluralName: String { get }
     static var fields: [CSPropertyDescription] { get }
     static var searchableFields: [AnyKeyPath] { get }
-    static func view() -> CSViewProtocol
+    static func view(_ db: String) -> CSViewProtocol
     
     var id: UInt64 { get set }
 }
 public extension CSEntityProtocol {
-    static func view() -> CSViewProtocol {
-        CSView<Self>()
+    static func view(_ db: String) -> CSViewProtocol {
+        return CSView<Self>(db)
     }
 }
