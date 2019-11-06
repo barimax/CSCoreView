@@ -20,10 +20,13 @@ extension CSDatabaseProtocol {
         self.db?.table(Entity.self)
     }
     var db: Database<MySQLDatabaseConfiguration>? {
-        let dbConfiguration = CSCoreDB (database: self.database)
+        guard var dbConfiguration = CSCoreDBConfig.dbConfiguration else {
+            return nil
+        }
+        dbConfiguration.database = self.database
         return try? Database(
             configuration: MySQLDatabaseConfiguration(
-                database: dbConfiguration.database,
+                database: dbConfiguration.database!,
                 host: dbConfiguration.host,
                 port: dbConfiguration.port,
                 username: dbConfiguration.username,
