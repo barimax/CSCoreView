@@ -31,6 +31,11 @@ public class CSEntity: Encodable {
         try container.encode(self.rows.map { EncodableWrapper($0) }, forKey: .rows)
         try container.encode(EncodableWrapper(self.view), forKey: .view)
     }
+    /// Initialize with type
+    public init(withType t: CSEntityProtocol.Type, withDatabase db: String) throws {
+        self.registerName = t.registerName
+        self.view = t.view(db)
+    }
     /// Initialize with empty entity
     public init(registerName rn: String, database db: String) throws {
         self.registerName = rn
