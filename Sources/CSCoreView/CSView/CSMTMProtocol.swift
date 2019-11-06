@@ -49,6 +49,7 @@ extension CSMTMDatabaseProtocol {
         }
         try connection.transaction {
             try self.db?.create(Entity.self, policy: .shallow)
+            try self.db?.sql("ALTER TABLE \(Entity.tableName) MODIFY COLUMN id BIGINT UNSIGNED AUTO_INCREMENT")
             try self.createRefTypes()
         }
     }

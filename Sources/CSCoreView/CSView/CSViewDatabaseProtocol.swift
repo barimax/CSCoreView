@@ -25,6 +25,7 @@ extension CSViewDatabaseProtocol  {
     }
     func create() throws {
         try self.db?.create(Entity.self, policy: .shallow)
+        try self.db?.sql("ALTER TABLE \(Entity.tableName) MODIFY COLUMN id BIGINT UNSIGNED AUTO_INCREMENT")
     }
     
     func getAll() throws -> [CSEntityProtocol] {
