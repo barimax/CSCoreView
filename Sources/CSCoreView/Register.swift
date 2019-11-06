@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PerfectMySQL
 
 public class CSRegister {
     static var store: [String: CSEntityProtocol.Type] = [:]
@@ -25,6 +26,16 @@ public class CSRegister {
         return type
     }
     public static func setup(withDatabase db: String) throws {
+        let mysql = MySQL()
+        let mysqlCofig = CSCoreDB(database: "")
+        let connected = mysql.connect(host: mysqlCofig.host, user: mysqlCofig.username, password: mysqlCofig.password, db: nil, port: UInt32(mysqlCofig.port))
+        guard connected else {
+            throw CSCoreDBError.connectionError
+        }
+        let result = mysql.query(statement: "CREATE DATABASE IF NOT EXISTS \(db)")
+        guard result else {
+            throw CSCoreDBError.databaseError
+        }
         for (_, entity) in CSRegister.store {
             let view = entity.view(db)
             try view.create()

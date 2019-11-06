@@ -2,21 +2,12 @@ import PerfectCRUD
 import PerfectMySQL
 
 public struct CSCoreDB {
-    public let host: String
-    public let username: String
-    public let password: String
+    public let host: String = "127.0.0.1"
+    public let username: String = "bmserver"
+    public let password: String = "B@r1m@x2016"
     public let database: String
     public let port: Int = 3306
-    
-    public init(
-        host: String,
-        username: String,
-        password: String,
-        database: String
-        ){
-        self.host = host
-        self.username = username
-        self.password = password
+    public init(database: String){
         self.database = database
     }
 }

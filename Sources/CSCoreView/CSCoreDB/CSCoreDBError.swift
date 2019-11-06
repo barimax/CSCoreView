@@ -12,4 +12,5 @@ enum CSCoreDBError: Error {
     case saveError(message: String)
     case joinError
     case deleteError
+    case databaseError
 }
