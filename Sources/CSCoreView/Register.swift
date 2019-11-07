@@ -25,10 +25,9 @@ public class CSRegister {
         }
         return type
     }
-    public static func setup(withDatabase db: String) throws {
+    public static func setup(withDatabase db: String, configuration c: CSCoreDB) throws {
         let mysql = MySQL()
-        let mysqlCofig = CSCoreDB(database: "")
-        let connected = mysql.connect(host: mysqlCofig.host, user: mysqlCofig.username, password: mysqlCofig.password, db: nil, port: UInt32(mysqlCofig.port))
+        let connected = mysql.connect(host: c.host, user: c.username, password: c.password, db: nil, port: UInt32(c.port))
         guard connected else {
             throw CSCoreDBError.connectionError
         }
@@ -42,5 +41,3 @@ public class CSRegister {
         }
     }
 }
-
-
