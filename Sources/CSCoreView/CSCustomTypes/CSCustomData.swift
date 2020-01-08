@@ -7,10 +7,10 @@
 import PerfectMySQL
 import Foundation
 
-class CSCustomData {
+public class CSCustomData {
     let mysql: MySQL
     
-    init(database db: String) {
+    public init(database db: String) {
         self.mysql = MySQL()
         let _ = self.mysql.connect(
             host: CSCoreDBConfig.dbConfiguration?.host,
@@ -32,7 +32,7 @@ class CSCustomData {
         let _ = lastStatement.results()
     }
     
-    func create(registerName: String, field fds: [CSDynamicEntityPropertyDescription]) throws {
+    public func create(registerName: String, field fds: [CSDynamicEntityPropertyDescription]) throws {
         try self.exec("BEGIN", params: [])
         var stmt = "CREATE TABLE IF NOT EXISTS `\(registerName)` ("
         var addID: Bool = true
