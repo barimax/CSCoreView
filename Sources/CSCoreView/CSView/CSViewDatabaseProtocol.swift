@@ -25,8 +25,10 @@ extension CSViewDatabaseProtocol  {
     }
     func create() throws {
         for f in Entity.fields {
-            if f.fieldType == .dynamicFormControl && !(Entity.self is CSDynamicFieldProtocol) {
-                throw CSViewError.dynamicFieldError
+            if f.fieldType == .dynamicFormControl {
+                if !(f.ref is CSDynamicFieldProtocol.Type) {
+                    throw CSViewError.dynamicFieldError
+                }
             }
         }
         try self.db?.create(Entity.self, policy: .shallow)
