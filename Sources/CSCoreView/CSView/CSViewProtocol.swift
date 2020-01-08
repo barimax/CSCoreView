@@ -17,6 +17,7 @@ public protocol CSViewProtocol:  TableNameProvider, Encodable {
     var searchableFields: [AnyKeyPath] { get }
     var refOptions: [String:CSRefOptionField] { get }
     var backRefs: [CSBackRefs] { get }
+    var refViews: [String:[CSDynamicEntityPropertyDescription]] { get }
     
     var db: Database<MySQLDatabaseConfiguration>? { get }
     var database: String { get }
@@ -43,6 +44,7 @@ public extension CSViewProtocol {
         try container.encode(fields, forKey: .fields)
         try container.encode(refOptions, forKey: .refOptions)
         try container.encode(backRefs, forKey: .backRefs)
+        try container.encode(refViews, forKey: .refViews)
         try container.encode(registerName, forKey: .singleName)
     }
     func toJSON() throws -> String {
@@ -53,7 +55,7 @@ public extension CSViewProtocol {
     }
 }
 enum CSViewCodingKeys: String, CodingKey {
-    case refs, singleName, pluralName, fields, refOptions, backRefs, registerName
+    case refs, singleName, pluralName, fields, refOptions, backRefs, registerName, refViews
 }
 
 

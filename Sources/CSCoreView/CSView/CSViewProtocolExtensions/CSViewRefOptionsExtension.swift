@@ -23,23 +23,34 @@ extension CSViewProtocol {
         var result: [String:CSRefOptionField] = [:]
         
         for field in self.fields {
-            if let ref = field.ref  {
-                if let customOptionsObject = ref as? CSCustomOptionsProtocol,
-                    let customOptions = customOptionsObject.customOptions(keyPath: field.keyPath) {
-                    let refOption: CSRefOptionField = CSRefOptionField(
-                        registerName: ref.registerName,
-                        options: customOptions,
-                        isButton: ref.isButton
-                    )
-                    result[field.name] = refOption
-                }else{
-                    let refOption: CSRefOptionField = CSRefOptionField(
-                        registerName: ref.registerName,
-                        options: ref.options(self.database),
-                        isButton: ref.isButton
-                    )
-                    result[field.name] = refOption
+            if field.fieldType != .dynamicFormControl {
+                if let ref = field.ref  {
+                    if let customOptionsObject = ref as? CSCustomOptionsProtocol,
+                        let customOptions = customOptionsObject.customOptions(keyPath: field.keyPath) {
+                        let refOption: CSRefOptionField = CSRefOptionField(
+                            registerName: ref.registerName,
+                            options: customOptions,
+                            isButton: ref.isButton
+                        )
+                        result[field.name] = refOption
+                    }else{
+                        let refOption: CSRefOptionField = CSRefOptionField(
+                            registerName: ref.registerName,
+                            options: ref.options(self.database),
+                            isButton: ref.isButton
+                        )
+                        result[field.name] = refOption
+                    }
                 }
+            }
+        }
+        return result
+    }
+    var refViews: [String: [CSDynamicEntityPropertyDescription]] {
+        var result: [String: [CSDynamicEntityPropertyDescription]] = [:]
+        for field in self.fields {
+            if let ref = field.ref, let dynamicRef = ref as? CSDynamicFieldProtocol.Type  {
+                result[field.name] = dynamicRef.fields
             }
         }
         return result
