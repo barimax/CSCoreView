@@ -42,7 +42,7 @@ public struct CSPropertyDescription: Encodable {
     }
     // Codable keys
     enum CodingKeys: String, CodingKey {
-        case fieldType, jsType, colWidth, name, required, label
+        case fieldType, jsType, colWidth, name, required, label, order
     }
     // Encodable conformance
     public func encode(to encoder: Encoder) throws {
@@ -53,7 +53,18 @@ public struct CSPropertyDescription: Encodable {
         try container.encode(colWidth, forKey: .colWidth)
         try container.encode(required, forKey: .required)
         try container.encode(label, forKey: .label)
+        try container.encode(order, forKey: .order)
     }
+//    public init(from decoder: Decoder) throws {
+//        let values = try decoder.container(keyedBy: CodingKeys.self)
+//        name = try values.decodeIfPresent(String.self, forKey: .name) ?? ""
+//        label = try values.decodeIfPresent(String.self, forKey: .label) ?? ""
+//        fieldType = try values.decodeIfPresent(FieldType.self, forKey: .fieldType) ?? .text
+//        jsType = try values.decodeIfPresent(JSType.self, forKey: .jsType) ?? .string
+//        colWidth = try values.decodeIfPresent(ColWidth.self, forKey: .colWidth) ?? .normal
+//        required = try values.decodeIfPresent(Bool.self, forKey: .required) ?? true
+//        order = try values.decodeIfPresent(Int.self, forKey: .order) ?? 0
+//    }
 }
 
 public enum FieldType: String, Codable {

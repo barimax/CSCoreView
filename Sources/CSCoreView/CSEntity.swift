@@ -60,9 +60,9 @@ public class CSEntity: Encodable {
     }
     
     /// Get all entities * Return CSEntityProtocol array
-    public func getAll() throws -> [CSEntityProtocol] { try self.view.getAll() }
+    public func getAll() throws -> [CSEntityProtocol] { return try self.view.getAll() }
     /// Get single entity * Return single entity by given id
-    public func get(id: UInt64) throws -> CSEntityProtocol { try self.view.get(id: id) }
+    public func get(id: UInt64) throws -> CSEntityProtocol { return try self.view.get(id: id) }
     /// Delete entity by id if it is not presented in some other entity
     public func delete(id: UInt64) throws -> [DeleteResponse] {
         let entityId: UInt64 = id
@@ -94,9 +94,9 @@ public class CSEntity: Encodable {
         return resp
     }
     /// Find all entities matching the criteria object
-    public func find(criteria: [String: Any]) -> [CSEntityProtocol] { self.view.find(criteria: criteria) }
+    public func find(criteria: [String: Any]) -> [CSEntityProtocol] { return self.view.find(criteria: criteria) }
     /// Search all entites if given string is presented in some of searchable properties
-    public func search(query: String) -> [CSEntityProtocol] { self.view.search(query: query) }
+    public func search(query: String) -> [CSEntityProtocol] { return self.view.search(query: query) }
     /// Delete current loaded entity
     public func delete() throws {
         guard let e = self.entity else {

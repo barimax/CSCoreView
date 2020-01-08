@@ -10,10 +10,10 @@ public protocol CSOptionableProtocol  {
     static func options(_ db: String) -> [UInt64: String]
     static var registerName: String { get }
 }
-public protocol CSOptionableEntityProtocol: CSOptionableProtocol where Self: CSEntityProtocol {
+public protocol CSOptionableEntityProtocol: CSOptionableProtocol  {
     static var optionField: AnyKeyPath { get }
 }
-public extension CSOptionableEntityProtocol  {
+public extension CSOptionableEntityProtocol where Self: CSEntityProtocol  {
     static func options(_ db: String) -> [UInt64: String] {
         var res: [UInt64: String] = [:]
         do {
@@ -31,7 +31,7 @@ public extension CSOptionableEntityProtocol  {
         return res
     }
     static var isButton: Bool {
-        true
+        return true
     }
 }
 public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
@@ -39,7 +39,7 @@ public protocol CSOptionableEnumProtocol: CSOptionableProtocol, CaseIterable {
 }
 public extension CSOptionableEnumProtocol {
     static var isButton: Bool {
-        false
+        return false
     }
 }
 

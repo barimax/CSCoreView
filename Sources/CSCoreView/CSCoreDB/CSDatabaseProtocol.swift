@@ -17,7 +17,7 @@ protocol CSDatabaseProtocol {
 }
 extension CSDatabaseProtocol {
     var table: Table<Entity, Database<MySQLDatabaseConfiguration>>? {
-        self.db?.table(Entity.self)
+        return self.db?.table(Entity.self)
     }
     var db: Database<MySQLDatabaseConfiguration>? {
         guard var dbConfiguration = CSCoreDBConfig.dbConfiguration else {

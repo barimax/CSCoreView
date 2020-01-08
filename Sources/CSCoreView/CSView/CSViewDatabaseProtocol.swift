@@ -12,16 +12,16 @@ import PerfectMySQL
 protocol CSViewDatabaseProtocol: CSViewProtocol, CSDatabaseProtocol {}
 
 extension CSViewDatabaseProtocol {
-    var registerName: String { Entity.registerName }
-    var singleName: String { Entity.singleName }
-    var pluralName: String { Entity.pluralName }
-    var fields: [CSPropertyDescription] { Entity.fields }
-    var searchableFields: [AnyKeyPath] { Entity.searchableFields }
+    var registerName: String { return Entity.registerName }
+    var singleName: String { return Entity.singleName }
+    var pluralName: String { return Entity.pluralName }
+    var fields: [CSPropertyDescription] { return Entity.fields }
+    var searchableFields: [AnyKeyPath] { return Entity.searchableFields }
 }
 
 extension CSViewDatabaseProtocol  {
     static var tableName: String {
-        Entity.tableName
+        return Entity.tableName
     }
     func create() throws {
         try self.db?.create(Entity.self, policy: .shallow)

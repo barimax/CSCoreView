@@ -190,7 +190,7 @@ extension CSMTMDatabaseProtocol {
                 i += 1
             }
             if let r = try? self.db?.sql(self.makeGetQuery(whereStirng: whereString), Entity.self) {
-                return r
+                return r ?? []
             }
         }
         return []
@@ -214,7 +214,7 @@ extension CSMTMDatabaseProtocol {
                 return []
             }
             if let r = try? self.db?.sql(self.makeGetQuery(whereStirng: whereString), Entity.self) {
-                return r
+                return r ?? []
             }
         }
         return []
