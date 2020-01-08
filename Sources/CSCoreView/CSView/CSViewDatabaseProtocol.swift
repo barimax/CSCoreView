@@ -24,6 +24,11 @@ extension CSViewDatabaseProtocol  {
         return Entity.tableName
     }
     func create() throws {
+        for f in Entity.fields {
+            if f.fieldType == .dynamicFormControl && !(Entity.self is CSDynamicFieldProtocol) {
+                throw CSViewError.dynamicFieldError
+            }
+        }
         try self.db?.create(Entity.self, policy: .shallow)
         try self.db?.sql("ALTER TABLE \(Entity.tableName) MODIFY COLUMN id BIGINT UNSIGNED AUTO_INCREMENT")
     }

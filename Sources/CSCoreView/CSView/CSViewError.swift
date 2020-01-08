@@ -12,5 +12,6 @@ public enum CSViewError: Error {
     case searchError
     case noEntity
     case differentType
+    case dynamicFieldError
 }
 
