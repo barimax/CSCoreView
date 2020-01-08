@@ -9,7 +9,8 @@ import Foundation
 import PerfectMySQL
 
 public class CSRegister {
-    static var store: [String: CSEntityProtocol.Type] = ["dynamicEntity": CSDynamicEntity.self]
+    static var store: [String: CSEntityProtocol.Type] = [:]
+//    static var store: [String: CSEntityProtocol.Type] = ["dynamicEntity": CSDynamicEntity.self]
     public static func add(forKey: String, type: CSEntityProtocol.Type) {
         CSRegister.store[forKey] = type
     }
