@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-MySQL.git",
         "state": {
           "branch": null,
-          "revision": "f9af3a9984aa4785fcbe7126eaf0bc39320296ec",
-          "version": "3.4.1"
+          "revision": "fe63085fe4639944657bf2f33b775e8036974eef",
+          "version": "3.5.1"
         }
       },
       {
@@ -24,8 +24,17 @@
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-mysqlclient.git",
         "state": {
           "branch": null,
-          "revision": "afec636bfa3302ea155f462f139da46a53fd351a",
-          "version": "2.1.0"
+          "revision": "ed4f0e775c874b535fb24b00e6600b81f2932907",
+          "version": "2.1.1"
+        }
+      },
+      {
+        "package": "SwiftString",
+        "repositoryURL": "https://github.com/iamjono/SwiftString.git",
+        "state": {
+          "branch": null,
+          "revision": "8017b12c3e20cf8fe4f9b5538a3aaf89562036c2",
+          "version": "2.1.1"
         }
       }
     ]
