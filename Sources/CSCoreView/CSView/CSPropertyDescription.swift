@@ -67,7 +67,7 @@ public struct CSPropertyDescription: Encodable {
 //    }
 }
 
-public enum FieldType: String, Codable {
+public enum FieldType: String, Codable, CaseIterable {
     case text,
     hidden,
     select,
@@ -87,7 +87,7 @@ public enum FieldType: String, Codable {
     email
 }
 
-public enum ColWidth: Int, Codable {
+public enum ColWidth: Int, Codable, CaseIterable {
     case small = 50
     case normal = 150
     case medium = 200
@@ -97,6 +97,6 @@ public enum ColWidth: Int, Codable {
     case extraLarge = 500
 }
 
-public enum JSType: String, Codable {
-    case number, float, string, bool, datetime, array, object
+public enum JSType: String, Codable, CaseIterable {
+    case number, float, string, bool, datetime, objectsArray, numbersArray, object
 }
