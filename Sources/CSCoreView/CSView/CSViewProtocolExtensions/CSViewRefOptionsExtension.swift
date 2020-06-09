@@ -46,11 +46,28 @@ extension CSViewProtocol {
         }
         return result
     }
-    var refViews: [String: [CSDynamicEntityPropertyDescription]] {
-        var result: [String: [CSDynamicEntityPropertyDescription]] = [:]
+    var refViews: [String: CSRefView] {
+        var result: [String: CSRefView] = [:]
         for field in self.fields {
             if let ref = field.ref, let dynamicRef = ref as? CSDynamicFieldProtocol.Type  {
-                result[field.name] = dynamicRef.fields
+                var refOptions: [String:CSRefOptionField] = [:]
+                for dField in dynamicRef.fields {
+                    if let innerRefType = dField.ref {
+                        let refOption: CSRefOptionField = CSRefOptionField(
+                            registerName: innerRefType.registerName,
+                            options: innerRefType.options(self.database),
+                            isButton: innerRefType.isButton
+                        )
+                        refOptions[dField.name] = refOption
+                       
+                    }
+                }
+                let refView: CSRefView = CSRefView(
+                    fields: dynamicRef.fields,
+                    refOptions: refOptions,
+                    defaultValue: dynamicRef.defaultValue ?? []
+                )
+                result[field.name] = refView
             }
         }
         return result

@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol CSRecalculatedProtocol {
-    func recalculate(_ source: CSEntityProtocol) -> CSEntityProtocol
+    static func recalculate(_ source: CSEntityProtocol, view: CSViewProtocol) -> CSEntityProtocol
 }

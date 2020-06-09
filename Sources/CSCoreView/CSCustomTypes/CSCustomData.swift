@@ -75,12 +75,12 @@ public struct CSCustomData {
             if f.name == "id" || f.name == "ID" {
                 field = "`id` BIGINT UNSIGNED AUTO_INCREMENT"
                 addID = false
-            }else if f.refRegisterName != nil {
+            }else if let ref = f.ref {
                 if f.fieldType == .select || f.fieldType == .dynamicFormControl {
                     field += "bigint(20)"
                 }else if f.fieldType == .multipleSelect{
                     field = ""
-                    let createRelationTableStmt = "CREATE TABLE IF NOT EXISTS \(registerName)_\(f.refRegisterName!) (`id` BIGINT UNSIGNED AUTO_INCREMENT, \(registerName)_id BIGINT UNSIGNED, \(f.refRegisterName!)_id BIGINT UNSIGNED, PRIMARY KEY (`id`));"
+                    let createRelationTableStmt = "CREATE TABLE IF NOT EXISTS \(registerName)_\(ref.registerName) (`id` BIGINT UNSIGNED AUTO_INCREMENT, \(registerName)_id BIGINT UNSIGNED, \(ref.registerName)_id BIGINT UNSIGNED, PRIMARY KEY (`id`));"
                     print(createRelationTableStmt)
                     try CSCustomData.exec(createRelationTableStmt, params: [], mysql: mysql)
                 }else{
@@ -282,9 +282,9 @@ public struct CSCustomData {
         var select: String = "SELECT `t1`.`id`"
         var join: String = ""
         for j in self.properties {
-            if j.refRegisterName != nil && j.fieldType == .multipleSelect {
+            if let ref = j.ref, j.fieldType == .multipleSelect {
                 select += ",CONCAT(\"[\",GROUP_CONCAT(`j\(i)`.`\(j.name)_id`),\"]\") AS `\(j.name)`"
-                join += " LEFT JOIN `\(self.registerName)_\(j.refRegisterName!)` AS `j\(i)` ON `j\(i)`.`\(self.registerName)_id` = `t1`.`id`"
+                join += " LEFT JOIN `\(self.registerName)_\(ref.registerName)` AS `j\(i)` ON `j\(i)`.`\(self.registerName)_id` = `t1`.`id`"
                 hasJoin = true
             }else{
                 select += ",`t1`.`\(j.name)`"
@@ -400,13 +400,13 @@ public struct CSCustomData {
         var params: [Any] = []
         var i = 0
         let _ = try? CSCustomData.exec("BEGIN;", params: [], mysql: self.mysql)
-        let refFields = self.properties.filter({ p in p.refRegisterName != nil && p.fieldType == .multipleSelect})
+        let refFields = self.properties.filter({ p in p.ref != nil && p.fieldType == .multipleSelect})
         if id > 0 {
             stmt = "UPDATE \(registerName) SET "
             for (k, v) in values {
                 let f = refFields.filter({ p in p.name == k})
                 if  f.count == 1 {
-                    let deleteOldStmt: String = "DELETE FROM \(self.registerName)_\(f[0].refRegisterName!) WHERE \(self.registerName)_id = ?;"
+                    let deleteOldStmt: String = "DELETE FROM \(self.registerName)_\(f[0].ref!.registerName) WHERE \(self.registerName)_id = ?;"
                     let deleteStament = MySQLStmt(self.mysql)
                     if !deleteStament.prepare(statement: deleteOldStmt) {
                         let _ = self.mysql.rollback()
@@ -424,7 +424,7 @@ public struct CSCustomData {
                         throw CSCustomDataError.notValidJSONValue(key: k)
                     }
                     for rel in decodedRels {
-                        let insertStmt = "INSERT INTO \(self.registerName)_\(f[0].refRegisterName!) (\(self.registerName)_id, \(f[0].refRegisterName!)_id) VALUES (?, ?);"
+                        let insertStmt = "INSERT INTO \(self.registerName)_\(f[0].ref!.registerName) (\(self.registerName)_id, \(f[0].ref!.registerName)_id) VALUES (?, ?);"
                         let insertStatement = MySQLStmt(self.mysql)
                         if !insertStatement.prepare(statement: insertStmt) {
                             let _ = self.mysql.rollback()
@@ -464,7 +464,7 @@ public struct CSCustomData {
                         throw CSCustomDataError.notValidJSONValue(key: k)
                     }
                     for r in decodedRels {
-                        rels.append((f[0].refRegisterName!, r))
+                        rels.append((f[0].ref!.registerName, r))
                     }
                 }else{
                     if i != 0 {

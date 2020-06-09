@@ -30,6 +30,8 @@ struct CSMTMView<E: CSMTMEntityProtocol>: CSMTMDatabaseProtocol {
 
 
 public struct TestEntity: CSEntityProtocol {
+    public static var db: Database<MySQLDatabaseConfiguration>?
+    
     public static var registerName: String = "test"
     public static var singleName: String = "Test"
     public static var pluralName: String = "Tests"

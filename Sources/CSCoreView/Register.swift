@@ -9,7 +9,7 @@ import Foundation
 import PerfectMySQL
 
 public class CSRegister {
-    static var store: [String: CSEntityProtocol.Type] = [:]
+    public static var store: [String: CSEntityProtocol.Type] = [:]
 //    static var store: [String: CSEntityProtocol.Type] = ["dynamicEntity": CSDynamicEntity.self]
     public static func add(forKey: String, type: CSEntityProtocol.Type) {
         CSRegister.store[forKey] = type
@@ -26,13 +26,13 @@ public class CSRegister {
         }
         return type
     }
-    public static func setup(withDatabase db: String, configuration c: CSCoreDB) throws {
+    public static func setup(withDatabase db: String, host h: String, username u: String, password p: String, port o: Int = 3306) throws {
         let mysql = MySQL()
-        let connected = mysql.connect(host: c.host, user: c.username, password: c.password, db: nil, port: UInt32(c.port))
+        let connected = mysql.connect(host: h, user: u, password: p, db: nil, port: UInt32(o))
         guard connected else {
             throw CSCoreDBError.connectionError
         }
-        let result = mysql.query(statement: "CREATE DATABASE IF NOT EXISTS \(db)")
+        let result = mysql.query(statement: "CREATE DATABASE IF NOT EXISTS `\(db)` CHARACTER SET utf8 COLLATE utf8_general_ci")
         guard result else {
             throw CSCoreDBError.databaseError
         }

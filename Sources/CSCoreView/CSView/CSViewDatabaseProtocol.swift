@@ -15,7 +15,10 @@ extension CSViewDatabaseProtocol {
     var registerName: String { return Entity.registerName }
     var singleName: String { return Entity.singleName }
     var pluralName: String { return Entity.pluralName }
-    var fields: [CSPropertyDescription] { return Entity.fields }
+    var fields: [CSPropertyDescription] {
+        let id = CSPropertyDescription(keyPath: \Entity.id)
+        return Entity.fields + [id]
+    }
     var searchableFields: [AnyKeyPath] { return Entity.searchableFields }
 }
 
@@ -36,7 +39,7 @@ extension CSViewDatabaseProtocol  {
     }
     
     func getAll() throws -> [CSEntityProtocol] {
-        guard let entities = try self.table?.select().map({ $0 }) else {
+        guard let entities = try self.table?.order(descending: \Entity.id).select().map({ $0 }) else {
             throw CSCoreDBError.entityNotFound
         }
         return entities

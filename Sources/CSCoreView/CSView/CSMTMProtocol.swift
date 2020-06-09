@@ -178,7 +178,7 @@ extension CSMTMDatabaseProtocol {
             try currentConnection.table(Entity.self).where(\Entity.id == id).delete()
         }
     }
-    func find(criteria: [String: Any]) -> [CSEntityProtocol] {
+    func find(criteria: [String: String]) -> [CSEntityProtocol] {
         if criteria.count > 0 {
             var whereString: String = "WHERE "
             var i: Int = 0

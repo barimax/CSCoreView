@@ -16,7 +16,21 @@ public struct CSPropertyDescription: Encodable {
     required: Bool,
     ref: CSOptionableProtocol.Type?,
     order: Int,
-    label: String
+    label: String,
+    disabled: Bool
+    
+    init(keyPath: AnyKeyPath ){
+        self.jsType = .number
+        self.keyPath = keyPath
+        self.colWidth = .small
+        self.name = "id"
+        self.required = false
+        self.ref = nil
+        self.order = 0
+        self.label = ""
+        self.fieldType = .hidden
+        self.disabled = false
+    }
     
     public init(
         keyPath: AnyKeyPath,
@@ -27,7 +41,8 @@ public struct CSPropertyDescription: Encodable {
         jsType: JSType = .string,
         colWidth: ColWidth = .normal,
         required: Bool = true,
-        order: Int = 0
+        order: Int = 0,
+        disabled: Bool = false
         ){
         
         self.keyPath = keyPath
@@ -39,10 +54,11 @@ public struct CSPropertyDescription: Encodable {
         self.ref = ref
         self.order = order
         self.label = label
+        self.disabled = disabled
     }
     // Codable keys
     enum CodingKeys: String, CodingKey {
-        case fieldType, jsType, colWidth, name, required, label, order
+        case fieldType, jsType, colWidth, name, required, label, order, disabled
     }
     // Encodable conformance
     public func encode(to encoder: Encoder) throws {
@@ -54,6 +70,7 @@ public struct CSPropertyDescription: Encodable {
         try container.encode(required, forKey: .required)
         try container.encode(label, forKey: .label)
         try container.encode(order, forKey: .order)
+        try container.encode(disabled, forKey: .disabled)
     }
 //    public init(from decoder: Decoder) throws {
 //        let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -72,11 +89,8 @@ public enum FieldType: String, Codable, CaseIterable {
     hidden,
     select,
     multipleSelect,
-    selectedDisable,
     dateTime,
     textarea,
-    textDisabled,
-    dbSelect,
     dynamicFormControl,
     info,
     checkbox,
@@ -84,10 +98,13 @@ public enum FieldType: String, Codable, CaseIterable {
     time,
     `switch`,
     password,
-    email
+    email,
+    radio,
+    uin
 }
 
 public enum ColWidth: Int, Codable, CaseIterable {
+    case none = 0
     case small = 50
     case normal = 150
     case medium = 200

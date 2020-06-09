@@ -31,8 +31,13 @@ public class CSEntity: Encodable {
         try container.encode(self.rows.map { EncodableWrapper($0) }, forKey: .rows)
         try container.encode(EncodableWrapper(self.view), forKey: .view)
     }
+    /// Initialize with properties
+    public init(view v: CSViewProtocol, registerName rn: String) {
+        self.view = v
+        self.registerName = rn
+    }
     /// Initialize with type
-    public init(withType t: CSEntityProtocol.Type, withDatabase db: String) throws {
+    public init(withType t: CSEntityProtocol.Type, withDatabase db: String) {
         self.registerName = t.registerName
         self.view = t.view(db)
     }
@@ -70,7 +75,7 @@ public class CSEntity: Encodable {
         var allowDelete: Bool = true
         for backRef in self.view.backRefs {
             let refEntity = try CSEntity(registerName: backRef.registerName, database: self.view.database)
-            let result = refEntity.find(criteria: [backRef.formField: entityId])
+            let result = refEntity.find(criteria: [backRef.formField: "\(entityId)"])
             if !result.isEmpty {
                 allowDelete = false
                 refEntity.rows = result
@@ -94,7 +99,7 @@ public class CSEntity: Encodable {
         return resp
     }
     /// Find all entities matching the criteria object
-    public func find(criteria: [String: Any]) -> [CSEntityProtocol] { return self.view.find(criteria: criteria) }
+    public func find(criteria: [String: String]) -> [CSEntityProtocol] { return self.view.find(criteria: criteria) }
     /// Search all entites if given string is presented in some of searchable properties
     public func search(query: String) -> [CSEntityProtocol] { return self.view.search(query: query) }
     /// Delete current loaded entity
@@ -116,37 +121,51 @@ public class CSEntity: Encodable {
     /// Save given entity and returns saved one
     public func save(entity: CSEntityProtocol) throws -> CSEntityProtocol {
         if type(of: self.view) == type(of: type(of: entity).view(self.view.database)) {
-            return try self.view.save(entity: entity)
+            var entityToSave = entity
+            try self.view.db?.sql("LOCK TABLES `\(type(of: entity).tableName)` WRITE")
+            if let modifiedEntity = entityToSave as? CSEntitySaveProtocol {
+                type(of: modifiedEntity).saveModifier(entity: &entityToSave, view: self.view)
+            }
+            
+            let savedEntity = try self.view.save(entity: entityToSave)
+            try self.view.db?.sql("UNLOCK TABLES")
+            return savedEntity
         }else{
             throw CSViewError.differentType
         }
+    }
+    public func save() throws -> CSEntityProtocol {
+        return try self.save(entity: self.entity!)
     }
     /// Save given entity and load it
     public func saveAndLoad(entity: CSEntityProtocol) throws {
         self.entity = try self.save(entity: entity)
     }
+    public func saveAndLoad() throws {
+        self.entity = try self.save()
+    }
     /// Recalculate entity
     public func recalculate(entity: CSEntityProtocol) -> CSEntityProtocol {
-        if let recalculatable = self.view as? CSRecalculatedProtocol {
-            return recalculatable.recalculate(entity)
+        if let recalculatable = self.view as? CSRecalculatedProtocol.Type {
+            return recalculatable.recalculate(entity, view: self.view)
         }
         return entity
     }
 }
-struct DecodableWrapper: Decodable {
+public struct DecodableWrapper: Decodable {
     static var baseType: Decodable.Type!
     var base: Decodable
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         self.base = try DecodableWrapper.baseType.init(from: decoder)
     }
 }
-struct EncodableWrapper : Encodable {
+public struct EncodableWrapper : Encodable {
     var value: Encodable?
-    init(_ value: Encodable?) {
+    public init(_ value: Encodable?) {
         self.value = value
     }
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try value?.encode(to: &container)
     }
