@@ -145,11 +145,11 @@ public class CSEntity: Encodable {
         self.entity = try self.save()
     }
     /// Recalculate entity
-    public func recalculate(entity: CSEntityProtocol) -> CSEntityProtocol {
-        if let recalculatable = self.view as? CSRecalculatedProtocol.Type {
-            return recalculatable.recalculate(entity, view: self.view)
+    public func recalculate() {
+        if let recalculatable = type(of: self.entity) as? CSRecalculatedProtocol.Type,
+        let entity = self.entity{
+            self.entity = recalculatable.recalculate(entity, view: &self.view)
         }
-        return entity
     }
 }
 public struct DecodableWrapper: Decodable {

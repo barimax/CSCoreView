@@ -16,10 +16,23 @@ extension CSViewDatabaseProtocol {
     var singleName: String { return Entity.singleName }
     var pluralName: String { return Entity.pluralName }
     var fields: [CSPropertyDescription] {
-        let id = CSPropertyDescription(keyPath: \Entity.id)
-        return Entity.fields + [id]
+        get {
+            let id = CSPropertyDescription(keyPath: \Entity.id)
+            return Entity.fields + [id]
+        }
+        set(newValue) {
+            Entity.fields = newValue
+        }
     }
     var searchableFields: [AnyKeyPath] { return Entity.searchableFields }
+    var recalculationTriggers: [String] {
+        return []
+    }
+}
+extension CSViewDatabaseProtocol where Self.Entity: CSRecalculatedProtocol {
+    var recalculationTriggers: [String] {
+        return Entity.recalcultionTriggers
+    }
 }
 
 extension CSViewDatabaseProtocol  {

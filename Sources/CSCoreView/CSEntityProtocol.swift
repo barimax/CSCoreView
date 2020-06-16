@@ -13,7 +13,7 @@ public protocol CSEntityProtocol: Codable, TableNameProvider {
     static var registerName: String { get }
     static var singleName: String { get }
     static var pluralName: String { get }
-    static var fields: [CSPropertyDescription] { get }
+    static var fields: [CSPropertyDescription] { get set }
     static var searchableFields: [AnyKeyPath] { get }
     static func view(_ db: String) -> CSViewProtocol
     

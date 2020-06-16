@@ -8,5 +8,6 @@
 import Foundation
 
 public protocol CSRecalculatedProtocol {
-    static func recalculate(_ source: CSEntityProtocol, view: CSViewProtocol) -> CSEntityProtocol
+    static func recalculate(_ source: CSEntityProtocol, view: inout CSViewProtocol) -> CSEntityProtocol
+    static var recalcultionTriggers: [String] { get }
 }

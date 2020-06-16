@@ -13,11 +13,12 @@ public protocol CSViewProtocol:  TableNameProvider, Encodable {
     var refs: [String:String] { get }
     var singleName: String { get }
     var pluralName: String { get }
-    var fields: [CSPropertyDescription] { get }
+    var fields: [CSPropertyDescription] { get set }
     var searchableFields: [AnyKeyPath] { get }
     var refOptions: [String:CSRefOptionField] { get }
     var backRefs: [CSBackRefs] { get }
     var refViews: [String: CSRefView]  { get }
+    var recalculationTriggers: [String] { get }
     
     var db: Database<MySQLDatabaseConfiguration>? { get }
     var database: String { get }
@@ -52,6 +53,7 @@ public extension CSViewProtocol {
         try container.encode(refViews, forKey: .refViews)
         try container.encode(registerName, forKey: .registerName)
         try container.encode(test, forKey: .test)
+        try container.encode(recalculationTriggers, forKey: .recalculationTriggers)
     }
     func toJSON() throws -> String {
         guard let str = try String(data: JSONEncoder().encode(self), encoding: .utf8) else {
@@ -61,7 +63,7 @@ public extension CSViewProtocol {
     }
 }
 enum CSViewCodingKeys: String, CodingKey {
-    case refs, singleName, pluralName, fields, refOptions, backRefs, registerName, refViews, test
+    case refs, singleName, pluralName, fields, refOptions, backRefs, registerName, refViews, test, recalculationTriggers
 }
 
 

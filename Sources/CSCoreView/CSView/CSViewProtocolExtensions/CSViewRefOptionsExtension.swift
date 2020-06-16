@@ -34,9 +34,13 @@ extension CSViewProtocol {
                         )
                         result[field.name] = refOption
                     }else{
+                        var dbName = self.database
+                        if ref.registerName == "user"{
+                            dbName = CSCoreDBConfig.dbConfiguration!.masterDatabase
+                        }
                         let refOption: CSRefOptionField = CSRefOptionField(
                             registerName: ref.registerName,
-                            options: ref.options(self.database),
+                            options: ref.options(dbName),
                             isButton: ref.isButton
                         )
                         result[field.name] = refOption
